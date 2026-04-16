@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VoucherController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,6 +19,12 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->middleware(['auth']);
 
+
+//Voucher Screen Route
+Route::middleware(['auth'])->group(function () {
+    Route::get('/vouchers', [VoucherController::class, 'index']);
+    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
