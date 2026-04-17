@@ -20,12 +20,26 @@ Route::get('/admin', function () {
 })->middleware(['auth']);
 
 
-//Voucher Screen Route
-Route::middleware(['auth'])->group(function () {
-    Route::get('/vouchers', [VoucherController::class, 'index']);
-    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
-});
 
+//VoucherController
+
+Route::middleware(['auth'])->group(function () {
+
+    // Voucher UI
+    Route::get('/vouchers', [VoucherController::class, 'index']);
+
+    // Generate vouchers (ONLY ONCE, SECURED)
+    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
+    Route::get('/vouchers/print/{id}', [VoucherController::class, 'print']);
+    
+
+});
+//print vochers
+Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']); //single
+Route::get('/vouchers/print-batch', [VoucherController::class, 'printBatch']); //batch
+
+
+//Auth
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

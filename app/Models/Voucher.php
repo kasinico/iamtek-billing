@@ -6,12 +6,46 @@ use Illuminate\Database\Eloquent\Model;
 
 class Voucher extends Model
 {
-    //
     protected $fillable = [
-        'code',
+        'code',//Printed voucher code
+        'username',
+        'password',
         'package_id',
         'user_id',
+        'router_id',
         'status',
-        'used_at'
+        'duration',
+        'bandwidth',
+        'used_at',
+        'activated_at',
+        'expires_at',
+        'is_pushed',
+        'router_response',
+        'sync_error'
     ];
+
+    /**
+     * Router relationship
+     */
+     /**
+     * Package relationship
+     */
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function router()
+    {
+        return $this->belongsTo(MikrotikDevice::class, 'router_id');
+    }
+
+   
+    /**
+     * User who generated voucher
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

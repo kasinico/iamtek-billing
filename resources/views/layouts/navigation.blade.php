@@ -15,7 +15,16 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
+               
+                <x-nav-link :href="url('/vouchers')" :active="request()->is('vouchers')">
+    Vouchers
+</x-nav-link>
+
+<x-nav-link :href="url('/admin')" :active="request()->is('admin')">
+    Admin Panel
+</x-nav-link>
+ </div>
+
             </div>
 
             <!-- Settings Dropdown -->
@@ -71,6 +80,8 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+
+     
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
