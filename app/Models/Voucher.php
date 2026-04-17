@@ -21,7 +21,8 @@ class Voucher extends Model
         'expires_at',
         'is_pushed',
         'router_response',
-        'sync_error'
+        'sync_error',
+        'batch_id'
     ];
 
     /**

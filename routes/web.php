@@ -23,20 +23,40 @@ Route::get('/admin', function () {
 
 //VoucherController
 
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
 
-    // Voucher UI
-    Route::get('/vouchers', [VoucherController::class, 'index']);
+//     // Voucher UI
+//     Route::get('/vouchers', [VoucherController::class, 'index']);
 
-    // Generate vouchers (ONLY ONCE, SECURED)
-    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
-    Route::get('/vouchers/print/{id}', [VoucherController::class, 'print']);
+//     // Generate vouchers (ONLY ONCE, SECURED)
+//     Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
+//     Route::get('/vouchers/print/{id}', [VoucherController::class, 'print']);
+
+
+//     //print vochers
+// Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']); //single
+// // Route::get('/vouchers/print-batch', [VoucherController::class, 'printBatch']); //batch
+// // Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch'])->name('vouchers.printBatch');
+// Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch']);
     
 
+// });
+Route::middleware(['auth'])->group(function () {
+
+    // Voucher page
+    Route::get('/vouchers', [VoucherController::class, 'index']);
+
+    // Generate vouchers
+    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
+
+    // Print single voucher
+    Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']);
+
+    // Print batch vouchers
+    // Route::get('/vouchers/print-batch/{id}', [VoucherController::class, 'printBatch']);
+    Route::get('/vouchers/print-batch/{id}', [VoucherController::class, 'printBatch'])->name('vouchers.printBatch');
+
 });
-//print vochers
-Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']); //single
-Route::get('/vouchers/print-batch', [VoucherController::class, 'printBatch']); //batch
 
 
 //Auth

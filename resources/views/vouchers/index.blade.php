@@ -48,12 +48,16 @@
 
 <hr>
 
-<h3>Recent Vouchers</h3>
-<a 
-a href="/vouchers/print-batch"> 
-Print Voucher Sheet
-</a> 
-<!-- buton for A4 print voucher -->
+
+ <h3>Recent Vouchers</h3>
+
+@if($vouchers->count())
+   <a href="{{ route('vouchers.printBatch', $vouchers->first()->batch_id) }}" target="_blank">
+    Print Latest Batch
+</a>
+@endif
+
+
 
 <table border="1" cellpadding="8">
     <thead>
@@ -90,9 +94,22 @@ Print Voucher Sheet
                 {{ $voucher->created_at }}
             </td>
             <td>
+                
+
+
+
+                
             <a href="/voucher/print/{{ $voucher->id }}">
             Print
             </a>
+
+            |
+
+            
+
+
+
+           
             </td>
         </tr>
         @endforeach

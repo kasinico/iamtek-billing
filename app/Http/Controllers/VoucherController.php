@@ -10,6 +10,8 @@ use App\Services\VoucherService;
 use App\Services\MikrotikPushService;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf; //print pdf vouchers
+use App\Models\VoucherBatch;
+use Illuminate\Support\Str;
 
 
 class VoucherController extends Controller
@@ -44,6 +46,7 @@ class VoucherController extends Controller
     /**
      * Generate + optionally push
      */
+    // public function generate(Request $request)
     public function generate(Request $request)
     {
         $validated = $request->validate([
@@ -56,6 +59,12 @@ class VoucherController extends Controller
         try {
 
             $results = [];
+
+            // CREATE BATCH FIRST
+            $batch = VoucherBatch::create([
+                'batch_name' => 'Batch-'.date('YmdHis'),
+                'quantity' => $validated['quantity']
+            ]);
 
             for ($i = 0; $i < $validated['quantity']; $i++) {
 
@@ -71,10 +80,11 @@ class VoucherController extends Controller
                     'status'   => 'unused',
                     'duration' => $validated['duration'],
 
+                    'batch_id' => $batch->id,
                     'is_pushed' => 0
                 ]);
 
-                // ONLY PUSH IF ROUTER EXISTS
+                // PUSH TO ROUTER IF SELECTED
                 if ($voucher->router_id) {
 
                     try {
@@ -129,17 +139,41 @@ class VoucherController extends Controller
 
         return $pdf->download('voucher-'.$voucher->code.'.pdf');
     }
-    public function printBatch() //printing A4 bantch vouchers
+    // public function printBatch() //printing A4 bantch vouchers
+    // {
+    //     $vouchers = Voucher::with('package')
+    //         ->latest()
+    //         ->take(100)
+    //         ->get();
+
+    //     $pdf = Pdf::loadView('vouchers.batch-print', [
+    //         'vouchers' => $vouchers
+    //     ]);
+
+    //     return $pdf->download('voucher-batch.pdf');
+    // }
+    public function printBatch($id)
     {
+
         $vouchers = Voucher::with('package')
-            ->latest()
-            ->take(100)
-            ->get();
+                    ->where('batch_id', $id)
+                    ->get();
 
-        $pdf = Pdf::loadView('vouchers.batch-print', [
-            'vouchers' => $vouchers
-        ]);
+        if($vouchers->isEmpty()){
+            // return "No vouchers found for batch ".$id;
+            return redirect()->back()->with('error', "No vouchers found for batch {$id}");
+        }
 
-        return $pdf->download('voucher-batch.pdf');
+        // $pdf = Pdf::loadView('vouchers.batch-print', [
+        //     'vouchers' => $vouchers
+        // ]);
+        $pdf = Pdf::loadView('vouchers.batch-print', compact('vouchers'));
+
+
+        return $pdf->download('batch-'.$id.'.pdf');
+
+        if (!$voucher->batch_id) {
+    Log::warning('Voucher missing batch_id', ['voucher' => $voucher->id]);
+}
     }
 }
