@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+/* TOP BAR */
+.topbar {
+    height: 55px;
+    background: #1f2937;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 230px;
+    background: #111827;
+    color: white;
+    position: fixed;
+    top: 55px;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    padding-top: 10px;
+}
+
+/* SIDEBAR LINKS */
+.sidebar a {
+    display: block;
+    padding: 12px 15px;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.sidebar a:hover {
+    background: #1f2937;
+    color: #fff;
+}
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}
+
+/* SECTION LABELS */
+.sidebar .section {
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 10px 15px;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+/* CONTENT AREA */
+.content {
+    margin-left: 230px;
+    margin-top: 55px;
+    padding: 20px;
+}
+
+/* CARD STYLE */
+.card-box {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        left: -230px;
+        transition: 0.3s;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}

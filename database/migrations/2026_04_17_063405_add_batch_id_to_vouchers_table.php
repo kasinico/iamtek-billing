@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vouchers', function (Blueprint $table) {
-                $table->foreignId('batch_id')->nullable()->constrained('voucher_batches');
-                $table->foreignId('batch_id')->nullable()->constrained()->nullOnDelete();
+             if (!Schema::hasColumn('vouchers', 'batch_id')) {
+            $table->unsignedBigInteger('batch_id')->nullable();
+        }
+
+                // $table->foreignId('batch_id')->nullable()->constrained('voucher_batches');
+                // $table->foreignId('batch_id')->nullable()->constrained()->nullOnDelete();
 
             //
         });

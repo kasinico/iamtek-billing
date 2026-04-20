@@ -1,3 +1,7 @@
+@extends('layouts.admin')
+
+@section('content')
+
 <h1>Voucher Generator</h1>
 
 @if(session('success'))
@@ -115,3 +119,4 @@
         @endforeach
     </tbody>
 </table>
+@endsection

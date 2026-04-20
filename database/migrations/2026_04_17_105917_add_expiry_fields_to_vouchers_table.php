@@ -1,0 +1,45 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+
+    public function up()
+    {
+        Schema::table('vouchers', function (Blueprint $table) {
+
+            if (!Schema::hasColumn('vouchers', 'expires_at')) {
+                $table->timestamp('expires_at')->nullable();
+            }
+
+            if (!Schema::hasColumn('vouchers', 'used_at')) {
+                $table->timestamp('used_at')->nullable();
+            }
+
+            if (!Schema::hasColumn('vouchers', 'status')) {
+                $table->string('status')->default('active');
+            }
+
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('vouchers', function (Blueprint $table) {
+
+            if (Schema::hasColumn('vouchers', 'expires_at')) {
+                $table->dropColumn('expires_at');
+            }
+
+            if (Schema::hasColumn('vouchers', 'used_at')) {
+                $table->dropColumn('used_at');
+            }
+
+            if (Schema::hasColumn('vouchers', 'status')) {
+                $table->dropColumn('status');
+            }
+
+        });
+    }
+};

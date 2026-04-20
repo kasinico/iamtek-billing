@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf; //print pdf vouchers
 use App\Models\VoucherBatch;
 use Illuminate\Support\Str;
+use App\Models\VoucherSession;
+
 
 
 class VoucherController extends Controller
@@ -174,6 +176,98 @@ class VoucherController extends Controller
 
         if (!$voucher->batch_id) {
     Log::warning('Voucher missing batch_id', ['voucher' => $voucher->id]);
-}
+        }
+    }
+    public function hotspotLogin(Request $request)
+{
+    $voucher = Voucher::where('code', $request->code)->first();
+
+    if (!$voucher) {
+        return response()->json(['error' => 'Invalid voucher']);
+    }
+
+    if ($voucher->status == 'expired') {
+        return response()->json(['error' => 'Voucher expired']);
+    }
+
+    if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
+        $voucher->update(['status' => 'expired']);
+        return response()->json(['error' => 'Voucher expired']);
+    }
+
+    // CREATE SESSION
+    VoucherSession::create([
+        'voucher_id' => $voucher->id,
+        'voucher_code' => $voucher->code,
+        'ip_address' => $request->ip(),
+        'mac_address' => $request->mac ?? null,
+        'router_id' => $voucher->router_id,
+        'login_at' => now(),
+        'status' => 'active'
+    ]);
+
+    // MARK VOUCHER AS USED
+    $voucher->update([
+        'status' => 'used',
+        'used_at' => now()
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Login successful'
+    ]);
+    }
+
+    public function hotspotLoginPage(Request $request)
+        {
+            return view('hotspot.login');
+        }
+
+
+
+    public function processHotspotLogin(Request $request)
+    {
+        $request->validate([
+            'code' => 'required',
+            'phone' => 'required'
+        ]);
+
+        $voucher = Voucher::where('code', $request->code)->first();
+
+        if (!$voucher) {
+            return back()->with('error', 'Invalid voucher');
+        }
+
+        if ($voucher->status === 'used') {
+            return back()->with('error', 'Voucher already used');
+        }
+
+        if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
+            $voucher->update(['status' => 'expired']);
+            return back()->with('error', 'Voucher expired');
+        }
+
+        // Create session tracking
+        VoucherSession::create([
+            'voucher_id' => $voucher->id,
+            'voucher_code' => $voucher->code,
+            'router_id' => $voucher->router_id,
+            'ip_address' => $request->ip(),
+            'login_at' => now(),
+            'status' => 'active',
+            'data_used' => 0
+        ]);
+
+        // mark voucher used
+        $voucher->update([
+            'status' => 'used',
+            'used_at' => now(),
+            'phone_number' => $request->phone
+        ]);
+
+        // 🔥 REDIRECT TO MIKROTIK AUTH
+        return redirect()->away(
+            "http://{$voucher->router->ip_address}/login?username={$voucher->username}&password={$voucher->password}"
+        );
     }
 }
