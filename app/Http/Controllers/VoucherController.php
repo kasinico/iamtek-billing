@@ -34,6 +34,13 @@ class VoucherController extends Controller
      */
     public function index()
     {
+        //===================shopkeepers only see their own routers ========================
+        $routerQuery = MikrotikDevice::where('is_active', 1);
+
+        if (auth()->user()->role === 'shopkeeper') {
+            $routerQuery->where('user_id', auth()->id());
+        }
+
         return view('vouchers.index', [
             'packages' => Package::all(),
             'routers'  => MikrotikDevice::all(),
