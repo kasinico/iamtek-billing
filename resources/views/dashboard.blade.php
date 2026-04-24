@@ -23,7 +23,7 @@
 
     <div class="bg-white p-4 shadow rounded">
         <div>Routers</div>
-        <div class="text-2xl font-bold">{{ $routers }}</div>
+        <div class="text-2xl font-bold">{{ $routers }}</div>hffffffffgjjjf
     </div>
 
 </div>

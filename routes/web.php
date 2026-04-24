@@ -1,118 +1,267 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+// use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\DashboardController;
+// use App\Http\Controllers\VoucherController;
+// use App\Http\Controllers\ResellerController;
+// use App\Http\Controllers\ProfileController;
+// use App\Http\Controllers\Admin\UserController;
+
+// /*
+// |--------------------------------------------------------------------------
+// | REDIRECT DASHBOARD
+// |--------------------------------------------------------------------------
+// */
+
+// Route::get('/dashboard', [DashboardController::class, 'index'])
+//     ->middleware(['auth', 'check.status'])
+//     ->name('dashboard');
+
+// /*
+// |--------------------------------------------------------------------------
+// | DASHBOARDS
+// |--------------------------------------------------------------------------
+// */
+
+// Route::middleware(['auth', 'check.status'])->group(function () {
+
+//     // Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
+//     //     ->name('admin.dashboard');
+
+//     // Route::get('/shopkeeper/dashboard', [DashboardController::class, 'shopkeeper'])
+//     //     ->name('shopkeeper.dashboard');
+// });
+
+// /*
+// |--------------------------------------------------------------------------
+// | VOUCHERS
+// |--------------------------------------------------------------------------
+// */
+
+// Route::middleware(['auth', 'check.status'])->group(function () {
+
+//     Route::get('/vouchers', [VoucherController::class, 'index']);
+//     Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
+
+//     Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']);
+//     Route::get('/vouchers/print-batch/{id}', [VoucherController::class, 'printBatch']);
+// });
+
+// /*
+// |--------------------------------------------------------------------------
+// | USERS (ADMIN)
+// |--------------------------------------------------------------------------
+// */
+
+// Route::middleware(['auth'])->group(function () {
+
+//     Route::get('/admin/users', [UserController::class, 'index']);
+//     Route::get('/admin/users/{id}/approve', [UserController::class, 'approve']);
+//     Route::get('/admin/users/{id}/disable', [UserController::class, 'disable']);
+//     Route::get('/admin/users/{id}/enable', [UserController::class, 'enable']);
+// });
+
+// /*
+// |--------------------------------------------------------------------------
+// | WIFI + HOTSPOT
+// |--------------------------------------------------------------------------
+// */
+
+// Route::get('/wifi/login', [VoucherController::class, 'showWifiLogin']);
+// Route::post('/wifi/login', [VoucherController::class, 'processWifiLogin']);
+
+// Route::get('/hotspot/login', [VoucherController::class, 'hotspotLoginPage']);
+// Route::post('/hotspot/login', [VoucherController::class, 'processHotspotLogin']);
+
+// /*
+// |--------------------------------------------------------------------------
+// | RESSELLER
+// |--------------------------------------------------------------------------
+// */
+
+// Route::get('/reseller/register', [ResellerController::class, 'create']);
+// Route::post('/reseller/register', [ResellerController::class, 'store']);
+
+// /*
+// |--------------------------------------------------------------------------
+// | PROFILE
+// |--------------------------------------------------------------------------
+// */
+
+// Route::middleware(['auth'])->group(function () {
+
+//     Route::get('/profile', [ProfileController::class, 'edit']);
+//     Route::patch('/profile', [ProfileController::class, 'update']);
+//     Route::delete('/profile', [ProfileController::class, 'destroy']);
+// });
+
+// require __DIR__.'/auth.php';
+
+
+
+
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ResellerController;
-use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\Admin\UserController;
 
-
-
-
-
+/*
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-
-//nico - protecting Admin routes
-// Route::get('/admin', function () {
-//     return view('admin.dashboard');
-// })->middleware(['auth']);
-
 Route::get('/pending', function () {
-    return view('pending');
-});
+    return view('auth.pending');
+})->name('pending');
 
 
-//VoucherController
-
-// Route::middleware(['auth'])->group(function () {
-
-//     // Voucher UI
-//     Route::get('/vouchers', [VoucherController::class, 'index']);
-
-//     // Generate vouchers (ONLY ONCE, SECURED)
-//     Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
-//     Route::get('/vouchers/print/{id}', [VoucherController::class, 'print']);
-
-
-//     //print vochers
-// Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']); //single
-// // Route::get('/vouchers/print-batch', [VoucherController::class, 'printBatch']); //batch
-// // Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch'])->name('vouchers.printBatch');
-// Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch']);
-    
-
-// });
-Route::middleware(['auth','approved'])->group(function () {
-
-    // Voucher page
-    Route::get('/vouchers', [VoucherController::class, 'index']);
-
-    // Generate vouchers
-    Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
-
-    // Print single voucher
-    Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']);
-
-    // Print batch vouchers
-    Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch'])
-        ->name('vouchers.printBatch');
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware(['auth'])
-        ->name('dashboard');
-
-    Route::get('/admin/users',[AdminUserController::class,'index']);
-
-    Route::post('/admin/users/{id}/approve',[AdminUserController::class,'approve']);
-
-    /*
+/*
 |--------------------------------------------------------------------------
-| WIFI HOTSPOT LOGIN (END USERS)
+| AUTHENTICATED ROUTES
 |--------------------------------------------------------------------------
 */
 
-Route::get('/wifi/login', [VoucherController::class, 'showWifiLogin']);
+Route::middleware(['auth','check.status'])->group(function () {
 
-Route::post('/wifi/login', [VoucherController::class, 'processWifiLogin']);
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD REDIRECT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/dashboard', function () {
+
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'shopkeeper') {
+            return redirect()->route('shopkeeper.dashboard');
+        }
+
+        return redirect('/');
+    })->name('dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARDS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/dashboard', [DashboardController::class,'admin'])
+        ->name('admin.dashboard');
+
+    Route::get('/shopkeeper/dashboard', [DashboardController::class,'shopkeeper'])
+        ->name('shopkeeper.dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VOUCHERS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/vouchers', [VoucherController::class,'index'])
+        ->name('vouchers.index');
+
+    Route::post('/vouchers/generate', [VoucherController::class,'generate'])
+        ->name('vouchers.generate');
+
+    Route::get('/voucher/print/{id}', [VoucherController::class,'printVoucher'])
+        ->name('voucher.print');
+
+    Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch'])
+        ->name('vouchers.printBatch');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN USERS MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/users', [UserController::class,'index'])
+        ->name('admin.users');
+
+    Route::get('/admin/users/{id}/approve', [UserController::class,'approve'])
+        ->name('admin.users.approve');
+
+    Route::get('/admin/users/{id}/disable', [UserController::class,'disable'])
+        ->name('admin.users.disable');
+
+    Route::get('/admin/users/{id}/enable', [UserController::class,'enable'])
+        ->name('admin.users.enable');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/profile', [ProfileController::class,'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class,'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class,'destroy'])
+        ->name('profile.destroy');
+
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| WIFI LOGIN (END USERS)
+|--------------------------------------------------------------------------
+*/
 
-//HOTSPOT LOGIN ROUTE
-Route::get('/hotspot/login', [VoucherController::class, 'hotspotLogin']);
-Route::get('/hotspot/login', [VoucherController::class, 'hotspotLoginPage']);
-Route::post('/hotspot/login', [VoucherController::class, 'processHotspotLogin']);
+Route::get('/wifi/login', [VoucherController::class,'showWifiLogin'])
+    ->name('wifi.login');
 
-//Auth
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::post('/wifi/login', [VoucherController::class,'processWifiLogin']);
 
-Route::middleware(['auth'])->group(function () {
 
-    Route::get('/admin/users', [UserController::class,'index']);
+/*
+|--------------------------------------------------------------------------
+| HOTSPOT LOGIN (CAPTIVE PORTAL)
+|--------------------------------------------------------------------------
+*/
 
-    Route::get('/admin/users/{id}/approve', [UserController::class,'approve']);
+Route::get('/hotspot/login', [VoucherController::class,'hotspotLoginPage'])
+    ->name('hotspot.login');
 
-    Route::get('/admin/users/{id}/disable', [UserController::class,'disable']);
-    Route::get('/admin/users/{id}/enable', [UserController::class,'enable']);
+Route::post('/hotspot/login', [VoucherController::class,'processHotspotLogin']);
 
-});
 
-Route::get('/reseller/register', [ResellerController::class,'create']);
+/*
+|--------------------------------------------------------------------------
+| RESELLER REGISTRATION
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/reseller/register', [ResellerController::class,'create'])
+    ->name('reseller.register');
+
 Route::post('/reseller/register', [ResellerController::class,'store']);
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__.'/auth.php';

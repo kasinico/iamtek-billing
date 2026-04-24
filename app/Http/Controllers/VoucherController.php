@@ -83,6 +83,7 @@ class VoucherController extends Controller
                     'duration' => $validated['duration'],
 
                     'batch_id' => $batch->id,
+                    'created_by' => auth()->id(),
                     'is_pushed' => 0
                 ]);
 

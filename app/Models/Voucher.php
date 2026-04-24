@@ -49,4 +49,13 @@ class Voucher extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+     public function scopeVisibleToUser($query)
+    {
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return $query;
+        }
+
+        return $query->where('user_id', auth()->id());
+    }
 }

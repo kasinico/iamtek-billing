@@ -16,9 +16,10 @@ class MikrotikTest extends Command
     {
         $client = new Client([
             'host' => '192.168.100.1',
-            'user' => 'admin',
-            'pass' => 'fROsw@Ve8Is&A6&trUWR',
+            'user' => 'iamtek',
+            'pass' => 'admin',
             'port' => 8728,
+            'legacy' => true
         ]);
 
         $query = new Query('/system/identity/print');

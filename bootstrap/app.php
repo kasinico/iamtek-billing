@@ -11,11 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+
         $middleware->alias([
-        'approved' => \App\Http\Middleware\EnsureUserApproved::class
+            'check.status' => \App\Http\Middleware\EnsureUserApproved::class,
+            'approved' => \App\Http\Middleware\EnsureUserApproved::class,
         ]);
-        //
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

@@ -13,19 +13,11 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <!-- totalVouchers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
-            <p class="text-gray-500">Total Vouchers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $totalVouchers }}</h2>
-        </div>
-
         <!-- My Vouchers -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
             <p class="text-gray-500">My Vouchers</p>
             <h2 class="text-3xl font-bold mt-2">{{ $myVouchers }}</h2>
         </div>
-
-        
 
         <!-- Used -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-green-500">
