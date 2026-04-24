@@ -107,6 +107,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RouterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -263,5 +264,12 @@ Route::post('/reseller/register', [ResellerController::class,'store']);
 | AUTH ROUTES
 |--------------------------------------------------------------------------
 */
+
+Route::get('/routers', [RouterController::class, 'index'])->name('routers.index');
+Route::get('/routers/create', [RouterController::class, 'create'])->name('routers.create');
+Route::post('/routers', [RouterController::class, 'store'])->name('routers.store');
+Route::get('/routers/{id}/edit', [RouterController::class, 'edit'])->name('routers.edit');
+Route::put('/routers/{id}', [RouterController::class, 'update'])->name('routers.update');
+Route::delete('/routers/{id}', [RouterController::class, 'destroy'])->name('routers.destroy');
 
 require __DIR__.'/auth.php';
