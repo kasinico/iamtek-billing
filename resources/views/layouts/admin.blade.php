@@ -217,6 +217,18 @@ Dashboard
     <a href="/vouchers" class="block p-2">Generate Vouchers</a>
     <a href="/voucher-batches" class="block p-2">My Sales</a>
     <a href="/revenue" class="block p-2">Revenue</a>
+    
+<div class="mt-4 text-xs font-bold text-gray-500 uppercase">Network</div>
+
+<a href="/routers"
+class="block p-2 rounded {{ request()->is('routers*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+Manage Routers
+</a>
+
+<a href="/hotspot-servers"
+class="block p-2 rounded {{ request()->is('hotspot-servers*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+Hotspot Servers
+</a>
 
     
 
@@ -248,7 +260,7 @@ Dashboard
 </button>
 
 <div class="font-semibold">
-Admin Panel
+Control Panel
 </div>
 
 </div>

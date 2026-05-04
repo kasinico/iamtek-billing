@@ -47,7 +47,41 @@
                         @endif
                     </td>
 
-                    <td class="p-2 border flex gap-2">
+
+                    <td class="p-2 border">
+                        <div class="flex gap-2 flex-wrap">
+
+                            <a href="{{ route('routers.test', $router->id) }}"
+                            class="bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                Test
+                            </a>
+
+                            <a href="{{ route('routers.edit', $router->id) }}"
+                            class="bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                                Edit
+                            </a>
+
+                            <form method="POST"
+                                action="{{ route('routers.destroy', $router->id) }}"
+                                onsubmit="return confirm('Delete this router?')">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="bg-red-500 text-white px-2 py-1 rounded text-xs">
+                                    Delete
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+
+                    @if(session('error'))
+    <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
+
+                    <!-- <td class="p-2 border flex gap-2">
                         <a href="{{ route('routers.edit', $router->id) }}"
                            class="text-blue-600">
                             Edit
@@ -63,7 +97,7 @@
                                 Delete
                             </button>
                         </form>
-                    </td>
+                    </td> -->
                 </tr>
             @empty
                 <tr>

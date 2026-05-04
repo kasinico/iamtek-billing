@@ -35,20 +35,29 @@ class VoucherController extends Controller
     public function index()
     {
         //===================shopkeepers only see their own routers ========================
+        //shopkeeper seeing all vouchers
+        //long table without pagination
+
         $routerQuery = MikrotikDevice::where('is_active', 1);
+        $voucherQuery = Voucher::with(['package', 'router'])->latest();
 
         if (auth()->user()->role === 'shopkeeper') {
             $routerQuery->where('user_id', auth()->id());
+            $voucherQuery->where('user_id', auth()->id());
         }
 
         return view('vouchers.index', [
             'packages' => Package::all(),
-            'routers'  => MikrotikDevice::all(),
-            // 'vouchers' => Voucher::latest()->take(20)->get()
-            'vouchers' => Voucher::with(['package','router'])
-                     ->latest()
-                     ->take(20)
-                     ->get()
+            'routers' => $routerQuery->get(),
+            'vouchers' => $voucherQuery->paginate(10),
+            //====================================12
+            // 'routers'  => MikrotikDevice::all(),
+            // //======================================12
+            // // 'vouchers' => Voucher::latest()->take(20)->get()
+            // 'vouchers' => Voucher::with(['package','router'])
+            //          ->latest()
+            //          ->take(20)
+            //          ->get()
         ]);
     }
 
@@ -62,8 +71,20 @@ class VoucherController extends Controller
             'package_id' => 'required|exists:packages,id',
             'router_id'  => 'nullable|exists:mikrotik_devices,id',
             'quantity'   => 'required|integer|min:1|max:1000',
-            'duration'   => 'required|integer|min:1'
+            // 'duration'   => 'required|integer|min:1'
         ]);
+            //=====================Also make sure shopkeepers cannot use another person’s router.
+        if (auth()->user()->role === 'shopkeeper') {
+            $routerAllowed = MikrotikDevice::where('id', $validated['router_id'])
+                ->where('user_id', auth()->id())
+                ->exists();
+
+            if (!$routerAllowed) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'You are not allowed to use this router.');
+            }
+        }
 
         try {
 
@@ -84,10 +105,10 @@ class VoucherController extends Controller
 
                     'package_id' => $validated['package_id'],
                     'router_id'  => $validated['router_id'] ?? null,
-                    'user_id'    => auth()->id(),
+                    'user_id'    => auth()->id(), //That means vouchers belong to the logged-in user
 
                     'status'   => 'unused',
-                    'duration' => $validated['duration'],
+                    // 'duration' => $validated['duration'],
 
                     'batch_id' => $batch->id,
                     'created_by' => auth()->id(),

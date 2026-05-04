@@ -271,5 +271,6 @@ Route::post('/routers', [RouterController::class, 'store'])->name('routers.store
 Route::get('/routers/{id}/edit', [RouterController::class, 'edit'])->name('routers.edit');
 Route::put('/routers/{id}', [RouterController::class, 'update'])->name('routers.update');
 Route::delete('/routers/{id}', [RouterController::class, 'destroy'])->name('routers.destroy');
+Route::get('/routers/{id}/test', [RouterController::class, 'test'])->name('routers.test');
 
 require __DIR__.'/auth.php';
