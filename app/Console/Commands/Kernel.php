@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\MikrotikTest::class,
+        \App\Console\Commands\SyncHotspotUsers::class, // 🔥 ADD THIS
+
     ];
 
     /**
@@ -19,6 +21,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command('hotspot:sync')->everyMinute();
+
         $schedule->command('vouchers:expire')->everyMinute();
         //
     }

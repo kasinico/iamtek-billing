@@ -105,10 +105,10 @@ Shop Users
 </a>
 
     
-<a href="/hotspot-users"
+<!-- <a href="/hotspot-users"
 class="block p-2 rounded {{ request()->is('hotspot-users*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
 Hotspot Users
-</a>
+</a> -->
 
 <a href="/pppoe-users"
 class="block p-2 rounded {{ request()->is('pppoe-users*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
@@ -163,10 +163,10 @@ class="block p-2 rounded {{ request()->is('vouchers*') ? 'bg-blue-500 text-white
 Generate
 </a>
 
-<a href="/voucher-batches"
+<!-- <a href="/voucher-batches"
 class="block p-2 rounded {{ request()->is('voucher-batches*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
 Batches
-</a>
+</a> -->
 
 <a href="/vouchers/print"
 class="block p-2 rounded text-gray-700 hover:bg-gray-100">
@@ -214,10 +214,24 @@ class="block p-2 rounded {{ request()->is('dashboard') ? 'bg-blue-500 text-white
 Dashboard
 </a>
 
-    <a href="/vouchers" class="block p-2">Generate Vouchers</a>
-    <a href="/voucher-batches" class="block p-2">My Sales</a>
+<a href="/vouchers" class="block p-2">Generate Vouchers</a>
+<a href="/voucher-batches" class="block p-2">My Sales</a>
     <a href="/revenue" class="block p-2">Revenue</a>
     
+
+<!-- Packages -->
+<div class="mt-4 text-xs font-bold text-gray-500 uppercase">Packages</div>
+
+<a href="/packages"
+class="block p-2 rounded {{ request()->is('packages*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+View Packages
+</a>
+
+<a href="/packages/create"
+class="block p-2 rounded text-gray-700 hover:bg-gray-100">
+Create Package
+</a>
+
 <div class="mt-4 text-xs font-bold text-gray-500 uppercase">Network</div>
 
 <a href="/routers"

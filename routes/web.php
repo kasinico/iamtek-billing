@@ -108,6 +108,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RouterController;
+use App\Http\Controllers\PackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -184,6 +185,9 @@ Route::middleware(['auth','check.status'])->group(function () {
 
     Route::get('/vouchers/print-batch/{id}', [VoucherController::class,'printBatch'])
         ->name('vouchers.printBatch');
+
+    Route::delete('/voucher/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy');
+
 
 
     /*
@@ -272,5 +276,25 @@ Route::get('/routers/{id}/edit', [RouterController::class, 'edit'])->name('route
 Route::put('/routers/{id}', [RouterController::class, 'update'])->name('routers.update');
 Route::delete('/routers/{id}', [RouterController::class, 'destroy'])->name('routers.destroy');
 Route::get('/routers/{id}/test', [RouterController::class, 'test'])->name('routers.test');
+
+
+Route::get('/packages', [PackageController::class, 'index'])
+    ->name('packages.index');
+
+Route::get('/packages/create', [PackageController::class, 'create'])
+    ->name('packages.create');
+
+Route::post('/packages', [PackageController::class, 'store'])
+    ->name('packages.store');
+
+Route::get('/packages/{id}/edit', [PackageController::class, 'edit'])
+    ->name('packages.edit');
+
+Route::put('/packages/{id}', [PackageController::class, 'update'])
+    ->name('packages.update');
+
+Route::delete('/packages/{id}', [PackageController::class, 'destroy'])
+    ->name('packages.destroy');
+
 
 require __DIR__.'/auth.php';

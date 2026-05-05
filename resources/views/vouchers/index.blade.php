@@ -42,7 +42,7 @@
         </summary>
 
         <div class="border-t border-gray-200 px-4 py-4">
-            <form id="generateForm" method="POST" action="{{ route('vouchers.generate') }}" class="grid md:grid-cols-5 gap-4">
+            <form id="generateForm" method="POST" action="{{ route('vouchers.generate') }}" class="grid md:grid-cols-4 gap-4">
                 @csrf
 
                 <div>
@@ -74,12 +74,7 @@
                            class="border rounded p-2 w-full" required>
                 </div>
 
-                <!-- <div>
-                    <label class="block text-sm mb-1 text-gray-700">Duration</label>
-                    <input type="number" name="duration" placeholder="Hours"
-                           class="border rounded p-2 w-full" required>
-                </div> -->
-
+               
                 <div class="flex items-end">
                     <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">
                         Generate Now
@@ -118,6 +113,7 @@
                         <th class="p-2 border">Status</th>
                         <th class="p-2 border">Created</th>
                         <th class="p-2 border">Print</th>
+                        <th class="p-2 border">Actions</th>
                     </tr>
                 </thead>
 
@@ -130,10 +126,14 @@
                             <td class="p-2 border">{{ $voucher->package->name ?? 'N/A' }}</td>
                             <td class="p-2 border">{{ $voucher->router->name ?? 'N/A' }}</td>
 
+                            
                             <td class="p-2 border">
                                 <span class="px-2 py-1 rounded text-xs
-                                    {{ $voucher->status === 'unused' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700' }}">
-                                    {{ $voucher->status }}
+                                    @if($voucher->status == 'unused') bg-yellow-100 text-yellow-700
+                                    @elseif($voucher->status == 'active') bg-blue-100 text-blue-700
+                                    @else bg-green-100 text-green-700
+                                    @endif">
+                                    {{ strtoupper($voucher->status) }}
                                 </span>
                             </td>
 
@@ -147,6 +147,19 @@
                                     Print
                                 </a>
                             </td>
+                            <td>
+
+                             <form method="POST"
+                                action="{{ route('voucher.destroy', $voucher->id) }}"
+                                onsubmit="return confirm('Delete this voucher?')">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="bg-red-500 text-white px-2 py-1 rounded text-xs">
+                                    Delete
+                                </button>
+                            </form>
+</td>
                         </tr>
                     @empty
                         <tr>

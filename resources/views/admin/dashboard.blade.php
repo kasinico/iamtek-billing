@@ -6,8 +6,8 @@
 
     <!-- Header -->
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">IAMTEK Dashboard</h1>
-        <p class="text-gray-500">Real-time ISP & Voucher Analytics</p>
+        <h1 class="text-2xl font-bold text-gray-800">ISP Live Dashboard</h1>
+        <p class="text-gray-500">Real-time voucher usage & system overview</p>
     </div>
 
     <!-- Stats Grid -->
@@ -18,6 +18,24 @@
             <p class="text-gray-500">Total Vouchers</p>
             <h2 class="text-3xl font-bold mt-2">{{ $totalVouchers }}</h2>
         </div>
+<!-- new tiles start -->
+
+        <div class="bg-yellow-50 p-4 shadow rounded">
+            <div class="text-gray-500 text-sm">Unused</div>
+            <div class="text-2xl font-bold">{{ $unusedVouchers }}</div> 
+        </div>
+
+        <div class="bg-blue-50 p-4 shadow rounded">
+            <div class="text-gray-500 text-sm">Active</div>
+            <div class="text-2xl font-bold">{{ $activeVouchers }}</div>
+        </div>
+
+        <div class="bg-green-50 p-4 shadow rounded">
+            <div class="text-gray-500 text-sm">Used</div>
+            <div class="text-2xl font-bold">{{ $usedVouchers }}</div>
+        </div>
+<!-- new tiles end -->
+
 
         <!-- My Vouchers -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
@@ -69,6 +87,12 @@
         </div>
 
     </div>
+
+</div>
+
+
+
+    
 
 </div>
 

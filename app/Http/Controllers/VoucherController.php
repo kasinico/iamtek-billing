@@ -34,32 +34,52 @@ class VoucherController extends Controller
      */
     public function index()
     {
-        //===================shopkeepers only see their own routers ========================
-        //shopkeeper seeing all vouchers
-        //long table without pagination
+    $routerQuery = MikrotikDevice::where('is_active', 1);
+    $packageQuery = Package::where('active', 1);
+    $voucherQuery = Voucher::with(['package', 'router'])->latest();
 
-        $routerQuery = MikrotikDevice::where('is_active', 1);
-        $voucherQuery = Voucher::with(['package', 'router'])->latest();
-
-        if (auth()->user()->role === 'shopkeeper') {
-            $routerQuery->where('user_id', auth()->id());
-            $voucherQuery->where('user_id', auth()->id());
-        }
-
-        return view('vouchers.index', [
-            'packages' => Package::all(),
-            'routers' => $routerQuery->get(),
-            'vouchers' => $voucherQuery->paginate(10),
-            //====================================12
-            // 'routers'  => MikrotikDevice::all(),
-            // //======================================12
-            // // 'vouchers' => Voucher::latest()->take(20)->get()
-            // 'vouchers' => Voucher::with(['package','router'])
-            //          ->latest()
-            //          ->take(20)
-            //          ->get()
-        ]);
+    /**
+     * Shopkeepers must only see their own routers, packages, and vouchers.
+     * Admin can see everything.
+     */
+    if (auth()->user()->role === 'shopkeeper') {
+        $routerQuery->where('user_id', auth()->id());
+        $packageQuery->where('user_id', auth()->id());
+        $voucherQuery->where('user_id', auth()->id());
     }
+
+    return view('vouchers.index', [
+        'packages' => $packageQuery->get(),
+        'routers'  => $routerQuery->get(),
+        'vouchers' => $voucherQuery->paginate(10),
+    ]);
+}
+    // {
+    //     //===================shopkeepers only see their own routers ========================
+    //     //shopkeeper seeing all vouchers
+
+    //     $routerQuery = MikrotikDevice::where('is_active', 1);
+    //     $voucherQuery = Voucher::with(['package', 'router'])->latest();
+
+    //     if (auth()->user()->role === 'shopkeeper') {
+    //         $routerQuery->where('user_id', auth()->id());
+    //         $voucherQuery->where('user_id', auth()->id());
+    //     }
+
+    //     return view('vouchers.index', [
+    //         'packages' => Package::all(),
+    //         'routers' => $routerQuery->get(),
+    //         'vouchers' => $voucherQuery->paginate(10),
+    //         //====================================12
+    //         // 'routers'  => MikrotikDevice::all(),
+    //         // //======================================12
+    //         // // 'vouchers' => Voucher::latest()->take(20)->get()
+    //         // 'vouchers' => Voucher::with(['package','router'])
+    //         //          ->latest()
+    //         //          ->take(20)
+    //         //          ->get()
+    //     ]);
+    // }
 
     /**
      * Generate + optionally push
@@ -71,8 +91,10 @@ class VoucherController extends Controller
             'package_id' => 'required|exists:packages,id',
             'router_id'  => 'nullable|exists:mikrotik_devices,id',
             'quantity'   => 'required|integer|min:1|max:1000',
-            // 'duration'   => 'required|integer|min:1'
         ]);
+        $package = Package::findOrFail($validated['package_id']);
+        $router = MikrotikDevice::findOrFail($validated['router_id']);
+
             //=====================Also make sure shopkeepers cannot use another person’s router.
         if (auth()->user()->role === 'shopkeeper') {
             $routerAllowed = MikrotikDevice::where('id', $validated['router_id'])
@@ -108,7 +130,7 @@ class VoucherController extends Controller
                     'user_id'    => auth()->id(), //That means vouchers belong to the logged-in user
 
                     'status'   => 'unused',
-                    // 'duration' => $validated['duration'],
+                    'duration' => $package->duration_in_hours,
 
                     'batch_id' => $batch->id,
                     'created_by' => auth()->id(),
@@ -267,8 +289,8 @@ class VoucherController extends Controller
             return back()->with('error', 'Invalid voucher');
         }
 
-        if ($voucher->status === 'used') {
-            return back()->with('error', 'Voucher already used');
+        if ($voucher->status !== 'unused') {
+        return back()->with('error', 'Voucher already used');
         }
 
         if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
@@ -298,5 +320,25 @@ class VoucherController extends Controller
         return redirect()->away(
             "http://{$voucher->router->ip_address}/login?username={$voucher->username}&password={$voucher->password}"
         );
+    }
+
+    public function destroy($id)
+    {
+        $voucher = $this->findAllowedRouter($id);
+
+        $voucher->delete();
+
+        return redirect()->route('vouchers.index')->with('success', 'Voucher deleted successfully.');
+    }
+
+    private function findAllowedRouter($id)
+    {
+        $voucher = Voucher::findOrFail($id);
+
+        if (auth()->user()->role === 'shopkeeper' && $voucher->user_id !== auth()->id()) {
+            abort(403, 'You are not allowed to access this voucher.');
+        }
+
+        return $voucher;
     }
 }

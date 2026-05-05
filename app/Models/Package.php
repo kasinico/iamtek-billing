@@ -16,13 +16,13 @@ class Package extends Model
         'price',              // UGX price
 
         'duration',           // numeric value (e.g 1, 24, 7)
-        'type',               // hr, day, week, month
+        'duration_unit',               // hr, day, week, month
 
         'bandwidth',          // e.g "2M/2M" (UI display + optional use)
 
         'mikrotik_profile',   // VERY IMPORTANT → links to router speed control
 
-        'is_active',          // enable/disable package
+        'active',          // enable/disable package
     ];
 
     /**
@@ -31,11 +31,11 @@ class Package extends Model
      */
     public function getDurationInHoursAttribute()
     {
-        return match ($this->type) {
-            'hr'   => $this->duration,
-            'day'  => $this->duration * 24,
+        return match ($this->duration_unit) {
+            'hour' => $this->duration,
+            'day' => $this->duration * 24,
             'week' => $this->duration * 24 * 7,
-            'month'=> $this->duration * 24 * 30,
+            'month' => $this->duration * 24 * 30,
             default => $this->duration,
         };
     }
