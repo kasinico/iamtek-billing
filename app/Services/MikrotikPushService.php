@@ -24,6 +24,7 @@ class MikrotikPushService
             'user' => $router->username,
             'pass' => $router->password,
             'port' => $router->port ?? 8728,
+            'timeout' => 2, 
         ]);
 
         try {
@@ -102,6 +103,7 @@ class MikrotikPushService
             'user' => $router->username,
             'pass' => $router->password,
             'port' => $router->port ?? 8728,
+            'timeout' => 2,
         ]);
 
         $profileName = $package->mikrotik_profile ?? 'default';
@@ -131,7 +133,7 @@ class MikrotikPushService
     /**
      * 🔥 CONVERT ANY DURATION TO HOURS (VERY IMPORTANT)
      */
-    private function convertToHours($package)
+    public function convertToHours($package)
     {
         return match ($package->duration_unit) {
             'hour'  => $package->duration,
@@ -140,6 +142,42 @@ class MikrotikPushService
             'month' => $package->duration * 24 * 30,
             default => $package->duration,
         };
+    }
+
+
+    public function updateProfileOnRouter($router, $package)
+    {
+        $client = new Client([
+            'host' => $router->ip_address,
+            'user' => $router->username,
+            'pass' => $router->password,
+            'port' => $router->port ?? 8728,
+            'timeout' => 2,
+        ]);
+
+        $profileName = $package->mikrotik_profile;
+
+        $print = new Query('/ip/hotspot/user/profile/print');
+        $print->where('name', $profileName);
+
+        $result = $client->query($print)->read();
+
+        if (!empty($result)) {
+
+            $id = $result[0]['.id'];
+
+            $update = new Query('/ip/hotspot/user/profile/set');
+            $update->equal('.id', $id);
+
+            $update->equal('rate-limit', $package->bandwidth ?? '2M/2M');
+
+            $hours = $this->convertToHours($package);
+            $update->equal('session-timeout', $hours . 'h');
+
+            $client->query($update)->read();
+
+            logger("Profile updated: " . $profileName);
+        }
     }
 }
     // public function ensureProfileExists($client, $voucher)

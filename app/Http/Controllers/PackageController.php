@@ -117,26 +117,18 @@ class PackageController extends Controller
         ]);
 
         //update to router ------------------------------------------------
-        $routers = MikrotikDevice::where('is_active', 1)->get();
+        $routers = MikrotikDevice::where('is_active', 1)
+            ->whereNotNull('ip_address')
+            ->get();
+
         $mikrotik = new MikrotikPushService();
 
         foreach ($routers as $router) {
-
-            $client = new \RouterOS\Client([
-                'host' => $router->ip_address,
-                'user' => $router->username,
-                'pass' => $router->password,
-                'port' => $router->port ?? 8728,
-            ]);
-
-            $update = new \RouterOS\Query('/ip/hotspot/user/profile/set');
-            $update->where('name', $package->mikrotik_profile);
-            $update->equal('rate-limit', $package->bandwidth);
-
-            $hours = app(MikrotikPushService::class)->convertToHours($package);
-            $update->equal('session-timeout', $hours . 'h');
-
-            $client->query($update)->read();
+            try {
+                $mikrotik->updateProfileOnRouter($router, $package);
+            } catch (\Throwable $e) {
+                logger("Update failed: " . $e->getMessage());
+            }
         }
 
         return redirect()
@@ -155,9 +147,13 @@ class PackageController extends Controller
         $profileName = $package->mikrotik_profile;
 
         // 🔥 Get active routers
-        $routers = MikrotikDevice::where('is_active', 1)->get();
+        // $routers = MikrotikDevice::where('is_active', 1)->get();
+        $routers = MikrotikDevice::where('is_active', 1)
+            ->whereNotNull('ip_address')
+            ->get();
 
         foreach ($routers as $router) {
+
             try {
 
                 $client = new \RouterOS\Client([
@@ -167,12 +163,22 @@ class PackageController extends Controller
                     'port' => $router->port ?? 8728,
                 ]);
 
-                $remove = new \RouterOS\Query('/ip/hotspot/user/profile/remove');
-                $remove->where('name', $package->mikrotik_profile);
+                $print = new \RouterOS\Query('/ip/hotspot/user/profile/print');
+                $print->where('name', $profileName);
 
-                $client->query($remove)->read();
+                $result = $client->query($print)->read();
 
-                logger("Profile deleted on router: " . $router->ip_address);
+                if (!empty($result)) {
+
+                    $id = $result[0]['.id'];
+
+                    $remove = new \RouterOS\Query('/ip/hotspot/user/profile/remove');
+                    $remove->equal('.id', $id);
+
+                    $client->query($remove)->read();
+
+                    logger("Deleted profile {$profileName} on {$router->ip_address}");
+                }
 
             } catch (\Throwable $e) {
 
