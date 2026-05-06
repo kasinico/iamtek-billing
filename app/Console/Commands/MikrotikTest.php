@@ -5,7 +5,8 @@ use Illuminate\Console\Command;
 use RouterOS\Client;
 use RouterOS\Query;
 
-
+use App\Models\MikrotikDevice;
+use App\Models\Voucher;
 
 class MikrotikTest extends Command
 {

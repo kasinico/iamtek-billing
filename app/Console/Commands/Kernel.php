@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\MikrotikTest::class,
-        \App\Console\Commands\SyncHotspotUsers::class, // 🔥 ADD THIS
+        \App\Console\Commands\SyncHotspotUsers::class,
+        \App\Console\Commands\ExpireVouchers::class, // 🔥 ADD THIS
 
     ];
 

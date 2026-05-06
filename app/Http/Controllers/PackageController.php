@@ -6,8 +6,14 @@ use App\Models\Package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\MikrotikPushService;
+use App\Models\MikrotikDevice;
+
+
+
 class PackageController extends Controller
 {
+    
     public function index()
     {
         $packages = Package::query()
@@ -40,8 +46,8 @@ class PackageController extends Controller
             'bandwidth'        => 'nullable|string|max:255',
             'mikrotik_profile' => 'required|string|max:255',
         ]);
-
-        Package::create([
+//SAVE PACKAGE INTO VARIABLE
+        $package = Package::create([
             'user_id'          => auth()->id(),
             'name'             => $validated['name'],
             'price'            => $validated['price'],
@@ -52,8 +58,31 @@ class PackageController extends Controller
             'active'           => $request->has('active') ? 1 : 0,
         ]);
 
+
+        // sending packages to router------------------------------
+        $routers = MikrotikDevice::where('is_active', 1)->get();
+        logger('Routers found: ' . $routers->count());
+
+
+        $mikrotik = new MikrotikPushService();
+
+        foreach ($routers as $router) {
+
+            try {
+
+                logger("Creating profile on router: " . $router->ip_address);
+
+                $mikrotik->createProfileFromPackage($router, $package);
+
+            } catch (\Throwable $e) {
+
+                logger("Profile create failed: " . $e->getMessage());
+            }
+        }
+
         return redirect()->route('packages.index')
             ->with('success', 'Package created successfully.');
+
     }
 
     // Edit the form
@@ -87,6 +116,29 @@ class PackageController extends Controller
             'active'           => $request->has('active') ? 1 : 0,
         ]);
 
+        //update to router ------------------------------------------------
+        $routers = MikrotikDevice::where('is_active', 1)->get();
+        $mikrotik = new MikrotikPushService();
+
+        foreach ($routers as $router) {
+
+            $client = new \RouterOS\Client([
+                'host' => $router->ip_address,
+                'user' => $router->username,
+                'pass' => $router->password,
+                'port' => $router->port ?? 8728,
+            ]);
+
+            $update = new \RouterOS\Query('/ip/hotspot/user/profile/set');
+            $update->where('name', $package->mikrotik_profile);
+            $update->equal('rate-limit', $package->bandwidth);
+
+            $hours = app(MikrotikPushService::class)->convertToHours($package);
+            $update->equal('session-timeout', $hours . 'h');
+
+            $client->query($update)->read();
+        }
+
         return redirect()
             ->route('packages.index')
             ->with('success', 'Package updated successfully.');
@@ -99,6 +151,36 @@ class PackageController extends Controller
     {
         $package = $this->findAllowedPackage($id);
 
+        // 🔥 Store profile BEFORE delete
+        $profileName = $package->mikrotik_profile;
+
+        // 🔥 Get active routers
+        $routers = MikrotikDevice::where('is_active', 1)->get();
+
+        foreach ($routers as $router) {
+            try {
+
+                $client = new \RouterOS\Client([
+                    'host' => $router->ip_address,
+                    'user' => $router->username,
+                    'pass' => $router->password,
+                    'port' => $router->port ?? 8728,
+                ]);
+
+                $remove = new \RouterOS\Query('/ip/hotspot/user/profile/remove');
+                $remove->where('name', $package->mikrotik_profile);
+
+                $client->query($remove)->read();
+
+                logger("Profile deleted on router: " . $router->ip_address);
+
+            } catch (\Throwable $e) {
+
+                logger("Delete failed on {$router->ip_address}: " . $e->getMessage());
+            }
+        }
+
+        // 🔥 Delete AFTER router cleanup
         $package->delete();
 
         return redirect()

@@ -20,20 +20,20 @@
 
     @if(session('success'))
         <div class="bg-green-50 text-green-700 border border-green-200 p-3 rounded-lg">
-            ✅ {{ session('success') }}
+             {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
         <div class="bg-red-50 text-red-700 border border-red-200 p-3 rounded-lg">
-            ❌ {{ session('error') }}
+             {{ session('error') }}
         </div>
     @endif
 
     <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
 
         <div class="overflow-x-auto">
-            <table class="min-w-full text-sm">
+            <table class="w-full text-sm">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
                         <th class="p-3 text-left">Name</th>

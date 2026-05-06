@@ -8,17 +8,16 @@ use App\Models\Voucher;
 
 class MikrotikPushService
 {
+    /**
+     * PUSH VOUCHER TO MIKROTIK
+     */
     public function pushVoucher(Voucher $voucher)
     {
-        $this->ensureProfileExists($voucher);
         $router = $voucher->router;
 
         if (!$router) {
             throw new \Exception("Router not assigned");
         }
-
-        // DEBUG (safe place)
-        // dd($router->ip_address, $router->username);
 
         $client = new Client([
             'host' => $router->ip_address,
@@ -28,45 +27,141 @@ class MikrotikPushService
         ]);
 
         try {
-            $client->connect();
 
+            // 🔥 Ensure profile exists before creating user
+            $this->ensureProfileExists($client, $voucher);
+
+            // 🔥 Remove existing user (avoid duplicate error)
+            $remove = new Query('/ip/hotspot/user/remove');
+            $remove->where('name', $voucher->username);
+            $client->query($remove)->read();
+
+            // 🔥 Create hotspot user
             $query = new Query('/ip/hotspot/user/add');
 
             $query->equal('name', $voucher->username);
             $query->equal('password', $voucher->password);
-            $query->equal('profile', $voucher->package->mikrotik_profile ?? 'default'); //profile assigned to the package.This controls speed/time policy on MikroTik
+            $query->equal('profile', $voucher->package->mikrotik_profile ?? 'default');
 
-            // $query->equal('profile', 'default');
-            $query->equal('limit-uptime', $voucher->duration . 'h');
+            // 🔥 Convert duration properly
+            $hours = $this->convertToHours($voucher->package);
+            $query->equal('limit-uptime', $hours . 'h');
+
             $query->equal('comment', 'VOUCHER-' . $voucher->id);
 
-            $client->query($query);
+            $response = $client->query($query)->read();
 
-            $response = $client->read();
+            logger('Voucher pushed: ' . $voucher->username);
 
             return $response;
 
         } catch (\Throwable $e) {
+
+            logger('MikroTik ERROR: ' . $e->getMessage());
+
             throw new \Exception("MikroTik PUSH FAILED: " . $e->getMessage());
         }
     }
-    public function ensureProfileExists($voucher)
+
+    /**
+     * CREATE PROFILE IF NOT EXISTS (USED DURING VOUCHER CREATION)
+     */
+    public function ensureProfileExists($client, $voucher)
     {
-        $profileName = $voucher->package->mikrotik_profile;
+        $profileName = $voucher->package->mikrotik_profile ?? 'default';
         $rateLimit   = $voucher->package->bandwidth ?? '2M/2M';
 
         $check = new Query('/ip/hotspot/user/profile/print');
         $check->where('name', $profileName);
 
-        $result = $this->client->query($check)->read();
+        $result = $client->query($check)->read();
 
         if (empty($result)) {
+
+            logger("Creating MikroTik profile (voucher): " . $profileName);
 
             $create = new Query('/ip/hotspot/user/profile/add');
             $create->equal('name', $profileName);
             $create->equal('rate-limit', $rateLimit);
 
-            $this->client->query($create)->read();
+            // 🔥 Apply session timeout
+            $hours = $this->convertToHours($voucher->package);
+            $create->equal('session-timeout', $hours . 'h');
+
+            $client->query($create)->read();
         }
     }
+
+    /**
+     * CREATE PROFILE WHEN PACKAGE IS CREATED
+     */
+    public function createProfileFromPackage($router, $package)
+    {
+        $client = new Client([
+            'host' => $router->ip_address,
+            'user' => $router->username,
+            'pass' => $router->password,
+            'port' => $router->port ?? 8728,
+        ]);
+
+        $profileName = $package->mikrotik_profile ?? 'default';
+        $rateLimit   = $package->bandwidth ?? '2M/2M';
+
+        $check = new Query('/ip/hotspot/user/profile/print');
+        $check->where('name', $profileName);
+
+        $result = $client->query($check)->read();
+
+        if (empty($result)) {
+
+            logger("Creating MikroTik profile (package): " . $profileName);
+
+            $create = new Query('/ip/hotspot/user/profile/add');
+            $create->equal('name', $profileName);
+            $create->equal('rate-limit', $rateLimit);
+
+            // 🔥 Apply correct session timeout
+            $hours = $this->convertToHours($package);
+            $create->equal('session-timeout', $hours . 'h');
+
+            $client->query($create)->read();
+        }
+    }
+
+    /**
+     * 🔥 CONVERT ANY DURATION TO HOURS (VERY IMPORTANT)
+     */
+    private function convertToHours($package)
+    {
+        return match ($package->duration_unit) {
+            'hour'  => $package->duration,
+            'day'   => $package->duration * 24,
+            'week'  => $package->duration * 24 * 7,
+            'month' => $package->duration * 24 * 30,
+            default => $package->duration,
+        };
+    }
 }
+    // public function ensureProfileExists($client, $voucher)
+    // {
+    //     $profileName = $voucher->package->mikrotik_profile ?? 'default';
+    //     $rateLimit   = $voucher->package->bandwidth ?? '2M/2M';
+
+    //     // 🔍 Check if profile exists
+    //     $check = new Query('/ip/hotspot/user/profile/print');
+    //     $check->where('name', $profileName);
+
+    //     $result = $client->query($check)->read();
+
+    //     // 🆕 Create if missing
+    //     if (empty($result)) {
+
+    //         $create = new Query('/ip/hotspot/user/profile/add');
+    //         $create->equal('name', $profileName);
+    //         $create->equal('rate-limit', $rateLimit);
+
+    //         $client->query($create)->read();
+
+    //         logger("Created MikroTik profile: " . $profileName);
+    //     }
+    // }

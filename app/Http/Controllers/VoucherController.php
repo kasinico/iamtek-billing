@@ -18,6 +18,7 @@ use App\Models\VoucherSession;
 
 class VoucherController extends Controller
 {
+    
     protected $voucherService;
     protected $mikrotikPush;
 
@@ -27,6 +28,7 @@ class VoucherController extends Controller
     ) {
         $this->voucherService = $voucherService;
         $this->mikrotikPush = $mikrotikPush;
+        
     }
 
     /**
@@ -37,6 +39,8 @@ class VoucherController extends Controller
     $routerQuery = MikrotikDevice::where('is_active', 1);
     $packageQuery = Package::where('active', 1);
     $voucherQuery = Voucher::with(['package', 'router'])->latest();
+
+    
 
     /**
      * Shopkeepers must only see their own routers, packages, and vouchers.
@@ -56,30 +60,7 @@ class VoucherController extends Controller
 }
     // {
     //     //===================shopkeepers only see their own routers ========================
-    //     //shopkeeper seeing all vouchers
-
-    //     $routerQuery = MikrotikDevice::where('is_active', 1);
-    //     $voucherQuery = Voucher::with(['package', 'router'])->latest();
-
-    //     if (auth()->user()->role === 'shopkeeper') {
-    //         $routerQuery->where('user_id', auth()->id());
-    //         $voucherQuery->where('user_id', auth()->id());
-    //     }
-
-    //     return view('vouchers.index', [
-    //         'packages' => Package::all(),
-    //         'routers' => $routerQuery->get(),
-    //         'vouchers' => $voucherQuery->paginate(10),
-    //         //====================================12
-    //         // 'routers'  => MikrotikDevice::all(),
-    //         // //======================================12
-    //         // // 'vouchers' => Voucher::latest()->take(20)->get()
-    //         // 'vouchers' => Voucher::with(['package','router'])
-    //         //          ->latest()
-    //         //          ->take(20)
-    //         //          ->get()
-    //     ]);
-    // }
+    
 
     /**
      * Generate + optionally push
@@ -137,11 +118,13 @@ class VoucherController extends Controller
                     'is_pushed' => 0
                 ]);
 
-                // PUSH TO ROUTER IF SELECTED
+                //================= PUSH TO ROUTER IF SELECTED=============================
+                // PUSH TO ROUTER
                 if ($voucher->router_id) {
 
                     try {
 
+                        // 🔥 THIS IS YOUR CORRECT PUSH LINE
                         $response = $this->mikrotikPush->pushVoucher($voucher);
 
                         $voucher->update([
@@ -157,7 +140,7 @@ class VoucherController extends Controller
                             'sync_error' => $e->getMessage()
                         ]);
 
-                        Log::error('Mikrotik push failed', [
+                        \Log::error('Mikrotik push failed', [
                             'voucher_id' => $voucher->id,
                             'error' => $e->getMessage()
                         ]);
