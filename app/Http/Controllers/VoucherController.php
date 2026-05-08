@@ -38,7 +38,7 @@ class VoucherController extends Controller
     {
     $routerQuery = MikrotikDevice::where('is_active', 1);
     $packageQuery = Package::where('active', 1);
-    $voucherQuery = Voucher::with(['package', 'router'])->latest();
+    $voucherQuery = Voucher::with(['package', 'router'])->latest(); //query contains ALL vouchers. before permission
 
     
 
@@ -58,8 +58,8 @@ class VoucherController extends Controller
         'vouchers' => $voucherQuery->paginate(10),
     ]);
 }
-    // {
-    //     //===================shopkeepers only see their own routers ========================
+    
+         //===================shopkeepers only see their own routers ========================
     
 
     /**
@@ -188,7 +188,7 @@ class VoucherController extends Controller
 
     //     return $pdf->download('voucher-batch.pdf');
     // }
-    public function printBatch($id)
+  public function printBatch($id)
     {
 
         $vouchers = Voucher::with('package')
@@ -212,8 +212,10 @@ class VoucherController extends Controller
     Log::warning('Voucher missing batch_id', ['voucher' => $voucher->id]);
         }
     }
+
+
     public function hotspotLogin(Request $request)
-{
+    {
     $voucher = Voucher::where('code', $request->code)->first();
 
     if (!$voucher) {

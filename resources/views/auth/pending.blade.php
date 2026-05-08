@@ -1,3 +1,9 @@
+@extends('layouts.sidebar')
+
+@section('content')
+
+
+
 <div class="flex items-center justify-center h-screen bg-gray-100">
 
     <div class="bg-white p-8 rounded shadow text-center w-96">
@@ -31,3 +37,6 @@
     </div>
 
 </div>
+
+
+@endsection

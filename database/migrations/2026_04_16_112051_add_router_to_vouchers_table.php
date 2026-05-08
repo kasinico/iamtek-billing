@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('package_id');
             $table->foreignId('user_id');
+            $table->foreignId('created_by')->nullable()->constrained('users');
             $table->timestamps();
             //
         });

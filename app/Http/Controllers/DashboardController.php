@@ -46,11 +46,23 @@ class DashboardController extends Controller
         // UNUSED
         'unusedVouchers' => \App\Models\Voucher::where('status', 'unused')->count(),
 
+        // myV
+        // 'myVouchers' => \App\Models\Voucher::where('created_by', auth()->id())->count(),
+
         // ROUTERS
         'routers' => MikrotikDevice::count(),
+        'myRouters' => MikrotikDevice::where('user_id', auth()->id())->count(),
+
+
+    
+        
 
         // 🔥 RECENT VOUCHERS (IMPORTANT)
-        'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
+        // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
+        'recentVouchers' => Voucher::where('created_by', auth()->id())
+                            ->latest()
+                            ->take(10)
+                            ->get(),
     ]);
 }
 
@@ -71,11 +83,17 @@ class DashboardController extends Controller
 
             // -----------------------------------
             'myVouchers' => Voucher::where('created_by', auth()->id())->count(),
+            
+            'activeVouchers' => Voucher::where('created_by','status', 'active')->count(),
+
             'usedVouchers' => Voucher::where('created_by', auth()->id()) //will merge with used up
                                     ->where('status','used')
                                     ->count(),
-            'activeSessions' => VoucherSession::where('status', 'active')->count(),
-            'routers' => MikrotikDevice::count(),
+            // 'activeSessions' => VoucherSession::where('status', 'active')->count(),
+            // 'routers' => MikrotikDevice::count(),
+            'routers' => MikrotikDevice::where('user_id', auth()->id())->count(),
+                    // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
+
         ]);
     }
 

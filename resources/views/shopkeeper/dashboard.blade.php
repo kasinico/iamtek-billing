@@ -27,8 +27,8 @@
 
         <!-- Active Sessions -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500">
-            <p class="text-gray-500">Active Sessions</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $activeSessions }}</h2>
+            <p class="text-gray-500">Active Users</p>
+            <h2 class="text-3xl font-bold mt-2">{{ $activeVouchers }}</h2>
         </div>
 
         <!-- Routers -->
@@ -54,9 +54,9 @@
         <div class="bg-white p-6 rounded-2xl shadow">
             <h3 class="font-semibold mb-4">Recent Activity</h3>
             <ul class="space-y-3 text-sm text-gray-600">
-                <li>✔ Voucher created successfully</li>
-                <li>✔ User logged into hotspot</li>
-                <li>✔ Router connected</li>
+                <li>Voucher created successfully</li>
+                <li> User logged into hotspot</li>
+                <li>Router connected</li>
             </ul>
         </div>
 

@@ -77,14 +77,14 @@ font-weight:bold;
 
 <hr>
 
-<p>Code</p>
-<strong>{{ $voucher->code }}</strong>
+<p>Username: 
+<strong>{{ $voucher->username }}</strong> </p>
 
-<!-- <p>Password</p>
-<strong>{{ $voucher->password }}</strong> -->
+<p>Password:
+<strong>{{ $voucher->password }}</strong> </p>
 
-<p>Package</p>
-<strong>{{ $voucher->package->name }}</strong>
+<p>Package: 
+<strong>{{ $voucher->package->name }}</strong> </p>
 <div class="small">
 {{ $voucher->created_at->format('d-m-y') }}
 </div>

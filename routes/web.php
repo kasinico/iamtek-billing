@@ -110,6 +110,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RouterController;
 use App\Http\Controllers\PackageController;
 
+use App\Http\Controllers\PaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC ROUTES
@@ -244,6 +246,19 @@ Route::post('/wifi/login', [VoucherController::class,'processWifiLogin']);
 | HOTSPOT LOGIN (CAPTIVE PORTAL)
 |--------------------------------------------------------------------------
 */
+
+
+Route::get('/hotspot', function () {
+    return view('hotspot.index', [
+        'packages' => \App\Models\Package::where('active', 1)->get()
+    ]);
+});
+
+Route::post('/pay', [PaymentController::class, 'initiate']);
+Route::post('/flutterwave/webhook', [PaymentController::class, 'webhook']);
+
+
+
 
 Route::get('/hotspot/login', [VoucherController::class,'hotspotLoginPage'])
     ->name('hotspot.login');

@@ -53,13 +53,13 @@
 
         <!-- Active Sessions -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500">
-            <p class="text-gray-500">Active Sessions</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $activeSessions }}</h2>
+            <p class="text-gray-500">Admin routers </p>
+            <h2 class="text-3xl font-bold mt-2">{{ $myRouters }}</h2>
         </div>
 
         <!-- Routers -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-orange-500">
-            <p class="text-gray-500">Routers</p>
+            <p class="text-gray-500">Total Routers</p>
             <h2 class="text-3xl font-bold mt-2">{{ $routers }}</h2>
         </div>
 

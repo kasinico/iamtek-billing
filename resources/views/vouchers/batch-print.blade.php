@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -54,10 +54,18 @@ IAMTEK WIFI
 
 <hr>
 
-<b>{{ $voucher->code }}</b>
+<!-- <b>{{ $voucher->code }}</b> -->
 
 <br>
 
+
+<b>Username: {{ $voucher->username }}</b>
+
+<br>
+
+<b>Password {{ $voucher->password }}</b>
+
+<br>
 Package
 <br>
 {{ $voucher->package->name }}
@@ -79,11 +87,11 @@ Package
 </table>
 
 </body>
-</html> -->
+</html> 
+
+
+
 <!-- 
-
-
-
 
 
 

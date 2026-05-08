@@ -22,7 +22,10 @@ class Voucher extends Model
         'is_pushed',
         'router_response',
         'sync_error',
-        'batch_id'
+        'batch_id',
+        'created_by',
+
+
     ];
 
     /**

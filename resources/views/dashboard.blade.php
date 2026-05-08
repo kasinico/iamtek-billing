@@ -19,7 +19,7 @@
 
     <div class="bg-white p-4 shadow rounded">
         <div>Active Users</div>
-        <div class="text-2xl font-bold">{{ $activeSessions }}</div>
+        <div class="text-2xl font-bold">{{ $activeVouchers }}</div>
     </div>
 
     <div class="bg-white p-4 shadow rounded">

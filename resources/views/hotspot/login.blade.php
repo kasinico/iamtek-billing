@@ -52,27 +52,45 @@
 
 <body>
 
-<div class="box">
 
-    <div class="title">IAMTEK WiFi Login</div>
 
-    @if(session('error'))
-        <p style="color:red">{{ session('error') }}</p>
-    @endif
 
-    <form method="POST" action="/login">
-        @csrf
 
-        <input type="text" name="code" placeholder="Enter Voucher Code" required>
 
-        <input type="text" name="phone" placeholder="Enter Phone Number" required>
+<h2>Connect to WiFi</h2>
 
-        <input type="hidden" name="router_id" value="{{ request('router_id') }}">
+<!-- OPTION A: VOUCHER LOGIN -->
+<form method="POST" action="/login-voucher">
+    @csrf
+    <input type="text" name="voucher" placeholder="Enter Voucher Code" required>
+    <button type="submit">Login</button>
+</form>
 
-        <button type="submit">Connect</button>
-    </form>
+<hr>
 
-</div>
+<!-- OPTION B: BUY INTERNET -->
+<h3>Buy Data</h3>
+
+<form method="POST" action="/pay">
+    @csrf
+
+    <select name="package_id">
+        @foreach($packages as $package)
+            <option value="{{ $package->id }}">
+                {{ $package->name }} - UGX {{ $package->price }}
+            </option>
+        @endforeach
+    </select>
+
+    <input type="text" name="phone" placeholder="2567XXXXXXXX" required>
+
+    <select name="network">
+        <option value="MTN">MTN</option>
+        <option value="AIRTEL">AIRTEL</option>
+    </select>
+
+    <button type="submit">Pay & Get Voucher</button>
+</form>
 
 </body>
 </html>
