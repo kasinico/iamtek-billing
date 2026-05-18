@@ -145,12 +145,13 @@ Hotspot Servers
 <div class="mt-4 text-xs font-bold text-gray-500 uppercase">Packages</div>
 
 <a href="/packages"
-class="block p-2 rounded {{ request()->is('packages*') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+class="block p-2 rounded {{ request()->is('packages') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+
 View Packages
 </a>
 
 <a href="/packages/create"
-class="block p-2 rounded text-gray-700 hover:bg-gray-100">
+class="block p-2 rounded {{ request()->is('packages/create') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
 Create Package
 </a>
 

@@ -63,7 +63,7 @@
         </div>
 
         <div>
-            <label class="block text-sm mb-1 text-gray-700">Bandwidth / Speed Limit</label>
+            <label class="block text-sm mb-1 text-gray-700">Bandwidth / Speed (Down/Up) </label>
             <input name="bandwidth"
                    value="{{ old('bandwidth') }}"
                    class="border rounded p-2 w-full"

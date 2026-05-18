@@ -2,66 +2,78 @@
 
 @section('content')
 
-<h2>Shopkeepers</h2>
+<h4>Manage Customers</h4>
 
-<table border="1" width="100%">
+<div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
 
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700">
 
-@foreach($users as $user)
+                <tr class="border-t hover:bg-gray-50">
+                        <th class="p-3 text-left">Name</th>
+                        <th class="p-2 border">Email</th>
+                        <th class="p-2 border">Status</th>
+                        <th class="p-2 border">Action</th>
+                </tr>
+            </thead>
 
-<tr>
+                <tbody>
 
-<td>{{ $user->name }}</td>
+                    @foreach($users as $user)
 
-<td>{{ $user->email }}</td>
+                <tr class="border-t hover:bg-gray-50">
 
-<td>
+                <td class="p-3">{{ $user->name }}</td>
 
-@if($user->status == 'active')
-🟢 Active
-@elseif($user->status == 'pending')
-🟡 Pending
-@else
-🔴 Disabled
-@endif
+                <td class="p-2 border ">{{ $user->email }}</td>
 
-</td>
+                <td class="p-2 border ">
 
-<td>
+                @if($user->status == 'active')
+                🟢 Active
+                @elseif($user->status == 'pending')
+                🟡 Pending
+                @else
+                🔴 Disabled
+                @endif
 
-@if($user->status == 'pending')
+                </td>
 
-<a href="{{ url('/admin/users/'.$user->id.'/approve') }}">Approve</a>
+                <td class="p-2 border ">
 
-@endif
+                @if($user->status == 'pending')
 
+                <a href="{{ url('/admin/users/'.$user->id.'/approve') }}">Approve</a>
 
-@if($user->status == 'active')
-
-<a href="{{ url('/admin/users/'.$user->id.'/disable') }}">Disable</a>
-
-@endif
+                @endif
 
 
-@if($user->status == 'disabled')
+                @if($user->status == 'active')
 
-<a href="{{ url('/admin/users/'.$user->id.'/enable') }}">Enable</a>
+                <a href="{{ url('/admin/users/'.$user->id.'/disable') }}">Disable</a>
 
-@endif
+                @endif
 
-</td>
 
-</td>
+                @if($user->status == 'disabled')
 
-</tr>
+                <a href="{{ url('/admin/users/'.$user->id.'/enable') }}">Enable</a>
 
-@endforeach
+                @endif
 
+                </td>
+
+                </td>
+
+                </tr>
+
+                @endforeach
+</tbody>
 </table>
+
+
+
+</div>
+</div>
 @endsection
