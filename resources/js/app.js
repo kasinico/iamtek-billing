@@ -15,7 +15,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // import './bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap';
+
+
 
 // import Alpine from 'alpinejs';
 

@@ -10,34 +10,82 @@ class CheckUserStatus
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
 
+        // =========================================
+        // NOT LOGGED IN
+        // =========================================
+
         if (!$user) {
+
             return redirect('/login');
+
         }
 
-        // allow admin always
-        if ($user->role === 'admin') {
-            return $next($request);
-        }
+        // =========================================
+        // PENDING USERS
+        // =========================================
 
-        // pending users
         if ($user->status === 'pending') {
 
-            // allow ONLY these routes
+            // Allow only pending/profile/logout pages
             if (
                 !$request->is('pending') &&
                 !$request->is('logout') &&
                 !$request->is('profile')
             ) {
+
                 return redirect('/pending');
+
             }
+
         }
+
+        // =========================================
+        // SHOPKEEPER RESTRICTIONS
+        // =========================================
+
+        if ($user->role === 'shopkeeper') {
+
+            // Block admin pages
+            if (
+
+                $request->is('admin/*') ||
+
+                $request->is('users*')
+
+            ) {
+
+                return redirect()->route('dashboard')
+                    ->with('error', 'Unauthorized access.');
+
+            }
+
+        }
+
+        // =========================================
+        // OPTIONAL:
+        // BLOCK ADMIN FROM SHOPKEEPER AREA
+        // =========================================
+
+        /*
+        if ($user->role === 'admin') {
+
+            if ($request->is('shopkeeper/*')) {
+
+                return redirect()->route('dashboard');
+
+            }
+
+        }
+        */
+
+        // =========================================
+        // ALLOW ACCESS
+        // =========================================
 
         return $next($request);
     }

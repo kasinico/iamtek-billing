@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.adminhmd')
+@include('partials.sidebar-collapse')
 
 @section('content')
 

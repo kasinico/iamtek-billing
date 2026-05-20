@@ -1,4 +1,8 @@
-@extends('layouts.admin')   
+@extends('layouts.adminhmd')
+@include('partials.sidebar-collapse')
+@include('partials.header')
+
+
 @section('content')
 
 <div class="bg-white shadow rounded p-4 max-w-xl">

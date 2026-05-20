@@ -1,4 +1,8 @@
-@extends('layouts.admin')
+@extends('layouts.adminhmd')
+@include('partials.sidebar-collapse')
+@include('partials.header')
+
+@section('title', 'Dashboard')
 
 @section('content')
 
@@ -82,7 +86,7 @@
             <ul class="space-y-3 text-sm text-gray-600">
                 <li>✔ Voucher created successfully</li>
                 <li>✔ User logged into hotspot</li>
-                <li>✔ Router connected</li>
+                <li>Router connected</li>
             </ul>
         </div>
 

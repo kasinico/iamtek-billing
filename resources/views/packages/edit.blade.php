@@ -1,97 +1,182 @@
-@extends('layouts.admin')
+@extends('layouts.adminhmd')
+@include('partials.header')
+
+@section('title', 'Edit Package')
 
 @section('content')
 
-<div class="max-w-2xl bg-white p-6 rounded-lg shadow border border-gray-200">
+<div class="max-w-2xl bg-white p-4 rounded shadow-sm border">
 
-    <h1 class="text-2xl font-bold text-gray-800">Edit Package</h1>
-    <p class="text-sm text-gray-500 mb-6">
+    <h1 class="h4 fw-bold mb-1">
+        Edit Package
+    </h1>
+
+    <p class="text-muted mb-4">
         Update package price, duration, speed, and MikroTik profile.
     </p>
 
     @if($errors->any())
-        <div class="bg-red-50 text-red-700 border border-red-200 p-3 rounded mb-4">
+
+        <div class="alert alert-danger">
+
             @foreach($errors->all() as $error)
-                <div>❌ {{ $error }}</div>
+
+                <div>{{ $error }}</div>
+
             @endforeach
+
         </div>
+
     @endif
 
-    <form method="POST" action="{{ route('packages.update', $package->id) }}" class="space-y-4">
+    <form method="POST"
+          action="{{ route('packages.update', $package->id) }}">
+
         @csrf
         @method('PUT')
 
-        <div>
-            <label class="block text-sm mb-1 text-gray-700">Package Name</label>
+        <div class="mb-3">
+
+            <label class="form-label">
+                Package Name
+            </label>
+
             <input name="name"
                    value="{{ old('name', $package->name) }}"
-                   class="border rounded p-2 w-full"
+                   class="form-control"
                    required>
+
         </div>
 
-        <div>
-            <label class="block text-sm mb-1 text-gray-700">Price</label>
+        <div class="mb-3">
+
+            <label class="form-label">
+                Price
+            </label>
+
             <input name="price"
                    type="number"
                    value="{{ old('price', $package->price) }}"
-                   class="border rounded p-2 w-full"
+                   class="form-control"
                    required>
+
         </div>
 
-        <div class="grid md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm mb-1 text-gray-700">Duration</label>
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Duration
+                </label>
+
                 <input name="duration"
                        type="number"
                        min="1"
                        value="{{ old('duration', $package->duration) }}"
-                       class="border rounded p-2 w-full"
+                       class="form-control"
                        required>
+
             </div>
 
-            <div>
-                <label class="block text-sm mb-1 text-gray-700">Duration Unit</label>
-                <select name="duration_unit" class="border rounded p-2 w-full" required>
-                    <option value="hour" {{ $package->duration_unit === 'hour' ? 'selected' : '' }}>Hour</option>
-                    <option value="day" {{ $package->duration_unit === 'day' ? 'selected' : '' }}>Day</option>
-                    <option value="week" {{ $package->duration_unit === 'week' ? 'selected' : '' }}>Week</option>
-                    <option value="month" {{ $package->duration_unit === 'month' ? 'selected' : '' }}>Month</option>
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Duration Unit
+                </label>
+
+                <select name="duration_unit"
+                        class="form-select"
+                        required>
+
+                    <option value="hour"
+                        {{ $package->duration_unit === 'hour' ? 'selected' : '' }}>
+                        Hour
+                    </option>
+
+                    <option value="day"
+                        {{ $package->duration_unit === 'day' ? 'selected' : '' }}>
+                        Day
+                    </option>
+
+                    <option value="week"
+                        {{ $package->duration_unit === 'week' ? 'selected' : '' }}>
+                        Week
+                    </option>
+
+                    <option value="month"
+                        {{ $package->duration_unit === 'month' ? 'selected' : '' }}>
+                        Month
+                    </option>
+
                 </select>
+
             </div>
+
         </div>
 
-        <div>
-            <label class="block text-sm mb-1 text-gray-700">Bandwidth / Speed (Down/Up) </label>
+        <div class="mb-3">
+
+            <label class="form-label">
+                Bandwidth / Speed
+            </label>
+
             <input name="bandwidth"
                    value="{{ old('bandwidth', $package->bandwidth) }}"
-                   class="border rounded p-2 w-full"
+                   class="form-control"
                    placeholder="Example: 2M/2M">
+
         </div>
 
-        <div>
-            <label class="block text-sm mb-1 text-gray-700">MikroTik Profile Name</label>
+        <div class="mb-3">
+
+            <label class="form-label">
+                MikroTik Profile
+            </label>
+
             <input name="mikrotik_profile"
                    value="{{ old('mikrotik_profile', $package->mikrotik_profile) }}"
-                   class="border rounded p-2 w-full"
+                   class="form-control"
                    required>
+
         </div>
 
-        <label class="flex items-center gap-2">
-            <input type="checkbox" name="active" {{ $package->active ? 'checked' : '' }}>
-            <span class="text-sm text-gray-700">Active</span>
-        </label>
+        <div class="form-check mb-4">
 
-        <div class="flex gap-2 pt-2">
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="active"
+                   id="active"
+                   {{ $package->active ? 'checked' : '' }}>
+
+            <label class="form-check-label"
+                   for="active">
+
+                Active
+
+            </label>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <button class="btn btn-primary">
+
                 Update Package
+
             </button>
 
             <a href="{{ route('packages.index') }}"
-               class="px-4 py-2 rounded border text-gray-600">
+               class="btn btn-outline-secondary">
+
                 Cancel
+
             </a>
+
         </div>
+
     </form>
+
 </div>
 
 @endsection

@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.adminhmd')
+@include('partials.sidebar-collapse')
 
 @section('content')
 
@@ -30,10 +31,11 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden table-responsive">
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
+                
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
                         <th class="p-3 text-left">Name</th>

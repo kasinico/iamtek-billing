@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.adminhmd')
+@include('partials.sidebar-collapse')
 
 @section('content')
 
@@ -36,7 +37,7 @@
                 <p class="text-xs text-gray-500">Click to open or hide the voucher generator.</p>
             </div>
 
-            <span class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+            <span class="btn btn-primary">
                 Generate
             </span>
         </summary>
@@ -76,7 +77,7 @@
 
                
                 <div class="flex items-end">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">
+                    <button class="btn btn-primary">
                         Generate Now
                     </button>
                 </div>
@@ -84,108 +85,275 @@
         </div>
     </details>
 
-    <div class="bg-white shadow rounded p-4">
 
-        <div class="flex justify-between items-center mb-4">
-            <div>
-                <h2 class="font-semibold">Recent Vouchers</h2>
-                <p class="text-xs text-gray-500">Showing latest generated vouchers.</p>
-            </div>
-
-            @if($vouchers->count() && $vouchers->first()->batch_id)
-                <a href="{{ route('vouchers.printBatch', $vouchers->first()->batch_id) }}"
-                   target="_blank"
-                   class="bg-gray-800 text-white px-3 py-2 rounded text-sm">
-                    Print Latest Batch
-                </a>
-            @endif
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm border">
-                <thead>
-                    <tr class="bg-gray-100 text-left">
-                        <th class="p-2 border">Code</th>
-                        <th class="p-2 border">Username</th>
-                        <th class="p-2 border">Password</th>
-                        <th class="p-2 border">Package</th>
-                        <th class="p-2 border">Router</th>
-                        <th class="p-2 border">Status</th>
-                        <th class="p-2 border">Created</th>
-                        <th class="p-2 border">Print</th>
-                        <th class="p-2 border">Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @forelse($vouchers as $voucher)
-                        <tr>
-                            <td class="p-2 border font-mono">{{ $voucher->code }}</td>
-                            <td class="p-2 border font-mono">{{ $voucher->username }}</td>
-                            <td class="p-2 border font-mono">{{ $voucher->password }}</td>
-                            <td class="p-2 border">{{ $voucher->package->name ?? 'N/A' }}</td>
-                            <td class="p-2 border">{{ $voucher->router->name ?? 'N/A' }}</td>
-
-                            
-                            <td class="p-2 border">
-                                <span class="px-2 py-1 rounded text-xs
-                                    @if($voucher->status == 'unused') bg-yellow-100 text-yellow-700
-                                    @elseif($voucher->status == 'active') bg-blue-100 text-blue-700
-                                    @elseif($voucher->status == 'expired') bg-blue-100 text-red-700
-                                    @else bg-green-100 text-green-700
-                                    @endif">
-                                    {{ strtoupper($voucher->status) }}
-                                </span>
-                            </td>
-
-                            <td class="p-2 border">
-                                {{ $voucher->created_at->format('Y-m-d H:i') }}
-                            </td>
-
-                            <td class="p-2 border">
-                                <a href="{{ route('voucher.print', $voucher->id) }}"
-                                   class="text-blue-600">
-                                    Print
-                                </a>
-                            </td>
-                            <td>
-
-                             <form method="POST"
-                                action="{{ route('voucher.destroy', $voucher->id) }}"
-                                onsubmit="return confirm('Delete this voucher?')">
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="bg-red-500 text-white px-2 py-1 rounded text-xs">
-                                    Delete
-                                </button>
-                            </form>
-</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="p-4 text-center text-gray-500">
-                                No vouchers found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mt-4">
-            {{ $vouchers->links() }}
-        </div>
-
-    </div>
 
 </div>
 
 
 
+         
+
+
+
+
+<section class="panel mt-3">
+
+    <div class="panel-header">
+
+        <div>
+
+            <h2 class="h5 mb-1 section-title">
+
+                <i class="bi bi-ticket-perforated" aria-hidden="true"></i>
+
+                <span>Recent Vouchers</span>
+
+            </h2>
+
+            <p class="text-muted mb-0">
+                Latest generated hotspot vouchers.
+            </p>
+
+        </div>
+
+        @if($vouchers->count() && $vouchers->first()->batch_id)
+
+            <a class="btn btn-outline-secondary btn-sm"
+               href="{{ route('vouchers.printBatch', $vouchers->first()->batch_id) }}"
+               target="_blank">
+
+                Print Latest Batch
+
+            </a>
+
+        @endif
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle mb-0">
+
+            <thead>
+
+                <tr>
+
+                    <th scope="col">
+                        Voucher
+                    </th>
+                    <th scope="col">
+                        Password
+                    </th>
+
+                    <th scope="col">
+                        Package
+                    </th>
+
+                    <th scope="col">
+                        Router
+                    </th>
+
+                    <th scope="col">
+                        Status
+                    </th>
+
+                    <th scope="col">
+                        Created
+                    </th>
+
+                    <th scope="col"
+                        class="text-end">
+
+                        Actions
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @forelse($vouchers as $voucher)
+
+                    <tr>
+
+                        <!-- USER / VOUCHER -->
+
+                        <td>
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                
+
+                                <div>
+
+                                    <p class="fw-semibold mb-0">
+
+                                        {{ $voucher->username }}
+
+                                    </p>
+
+                                    <p class="text-muted small mb-0">
+
+                                        {{ $voucher->code }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <!-- PACKAGE -->
+
+                         <td>
+
+                            {{ $voucher->password }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ $voucher->package->name ?? 'N/A' }}
+
+                        </td>
+
+                        <!-- ROUTER -->
+
+                        <td>
+
+                            {{ $voucher->router->name ?? 'N/A' }}
+
+                        </td>
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            @if($voucher->status == 'unused')
+
+                                <span class="badge text-bg-warning">
+
+                                    UNUSED
+
+                                </span>
+
+                            @elseif($voucher->status == 'active')
+
+                                <span class="badge text-bg-primary">
+
+                                    ACTIVE
+
+                                </span>
+
+                            @elseif($voucher->status == 'used')
+
+                                <span class="badge text-bg-success">
+
+                                    USED
+
+                                </span>
+
+                            @elseif($voucher->status == 'expired')
+
+                                <span class="badge text-bg-danger">
+
+                                    EXPIRED
+
+                                </span>
+
+                            @else
+
+                                <span class="badge text-bg-secondary">
+
+                                    {{ strtoupper($voucher->status) }}
+
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        <!-- CREATED -->
+
+                        <td>
+
+                            {{ $voucher->created_at->format('d M Y H:i') }}
+
+                        </td>
+
+                        <!-- ACTIONS -->
+
+                        <td class="text-end">
+
+                            <div class="d-flex justify-content-end gap-1">
+
+                                <!-- PRINT -->
+
+                                <a class="btn btn-light btn-sm"
+                                   href="{{ route('voucher.print', $voucher->id) }}"
+                                   target="_blank">
+
+                                    Print
+
+                                </a>
+
+                                <!-- DELETE -->
+
+                                <form method="POST"
+                                      action="{{ route('voucher.destroy', $voucher->id) }}"
+                                      onsubmit="return confirm('Delete this voucher?')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-danger btn-sm">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-4 text-muted">
+
+                            No vouchers found.
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- PAGINATION -->
+
+    <div class="p-3 border-top">
+
+        {{ $vouchers->links() }}
+
+    </div>
+
+</section>
+
 @endsection 
-
-
-
-
 

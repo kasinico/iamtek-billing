@@ -150,7 +150,7 @@ Route::middleware(['auth','check.status'])->group(function () {
         }
 
         if ($user->role === 'shopkeeper') {
-            return redirect()->route('shopkeeper.dashboard');
+            return redirect()->route('dashboards.shopkeeper');
         }
 
         return redirect('/');
@@ -163,11 +163,30 @@ Route::middleware(['auth','check.status'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/admin/dashboard', [DashboardController::class,'admin'])
-        ->name('admin.dashboard');
+    Route::get('/admin/dashboard', function () {
 
-    Route::get('/shopkeeper/dashboard', [DashboardController::class,'shopkeeper'])
-        ->name('shopkeeper.dashboard');
+    if (auth()->user()->role !== 'admin') {
+
+        return redirect()->route('dashboard');
+
+    }
+
+    return app(DashboardController::class)->admin();
+
+    })->name('admin.dashboard');
+
+
+    Route::get('/shopkeeper/dashboard', function () {
+
+        if (auth()->user()->role !== 'shopkeeper') {
+
+            return redirect()->route('dashboard');
+
+        }
+
+        return app(DashboardController::class)->shopkeeper();
+
+    })->name('dashboards.shopkeeper');
 
 
     /*
@@ -198,8 +217,17 @@ Route::middleware(['auth','check.status'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/admin/users', [UserController::class,'index'])
-        ->name('admin.users');
+    Route::get('/admin/users', function () {
+
+        if (auth()->user()->role !== 'admin') {
+
+            return redirect()->route('dashboard');
+
+        }
+
+        return app(UserController::class)->index();
+
+    })->name('admin.users');
 
     Route::get('/admin/users/{id}/approve', [UserController::class,'approve'])
         ->name('admin.users.approve');

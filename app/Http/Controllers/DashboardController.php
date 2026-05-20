@@ -28,9 +28,37 @@ class DashboardController extends Controller
     //         'myVouchers' => Voucher::where('created_by', auth()->id())->count(),
     //     ]);
     // }
+
+
+public function index()
+{
+    $role = auth()->user()->role;
+
+    $data = [
+
+        'totalVouchers' => Voucher::count(),
+
+        'activeSessions' => VoucherSession::where('status', 'active')->count(),
+
+        'totalRouters' => MikrotikDevice::count(),
+
+        'totalRevenue' => Voucher::sum('price'),
+
+    ];
+
+    if ($role === 'admin') {
+
+        return view('dashboards.admin', $data);
+
+    }
+
+    return view('dashboards.shopkeeper', $data);
+}
+
+
     public function admin()
 {
-    return view('admin.dashboard', [
+    return view('dashboards.admin', [
 
         // TOTAL
         'totalVouchers' => \App\Models\Voucher::count(),
@@ -70,7 +98,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        return view('shopkeeper.dashboard', [
+        return view('dashboards.shopkeeper', [
             //real data
             'total' => Voucher::where('created_by', $user->id)->count(),
             'active' => Voucher::where('created_by', $user->id)
