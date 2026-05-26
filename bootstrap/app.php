@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check.status' => \App\Http\Middleware\EnsureUserApproved::class,
             'approved' => \App\Http\Middleware\EnsureUserApproved::class,
+            'check.subscription' =>
+                \App\Http\Middleware\CheckSubscriptionStatus::class,
         ]);
 
     })

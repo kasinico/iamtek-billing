@@ -93,12 +93,35 @@
 
                 </div>
 
+                
+
                 <div>
 
                     <span>Joined</span>
 
                     <strong>
                         {{ auth()->user()->created_at->format('d M Y') }}
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <span>Country</span>
+
+                    <strong>
+                        {{ auth()->user()->country }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>Contact</span>
+
+                    <strong>
+                        {{ auth()->user()->phone }}
                     </strong>
 
                 </div>

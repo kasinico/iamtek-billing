@@ -15,7 +15,8 @@
 
 
 
-<div class="p-6 bg-gray-50 min-h-screen">
+  <div class="dashboard-overview mb-4">
+
 
     <!-- Header -->
     <!-- <div class="mb-6">
@@ -53,7 +54,7 @@
 
         <!-- totalVouchers -->
         <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
-            <p class="text-gray-500">Total Vouchers</p>
+            <p class="text-gray-500">Total Vouchers.</p>
             <h2 class="text-3xl font-bold mt-2">{{ $totalVouchers }}</h2>
         </div>
 <!-- new tiles start -->
@@ -103,28 +104,7 @@
 
     </div>
 
-    <!-- Analytics Section -->
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Chart Placeholder -->
-        <div class="bg-white p-6 rounded-2xl shadow">
-            <h3 class="font-semibold mb-4">Usage Analytics</h3>
-            <div class="h-64 flex items-center justify-center text-gray-400">
-                Chart (integrate Chart.js / ApexCharts)
-            </div>
-        </div>
-
-        <!-- Activity Feed -->
-        <div class="bg-white p-6 rounded-2xl shadow">
-            <h3 class="font-semibold mb-4">Recent Activity</h3>
-            <ul class="space-y-3 text-sm text-gray-600">
-                <li>✔ Voucher created successfully</li>
-                <li>✔ User logged into hotspot</li>
-                <li>Router connected</li>
-            </ul>
-        </div>
-
-    </div>
+    
 
 </div>
   
@@ -141,7 +121,7 @@
               <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
               <div>
                 <p class="eyebrow mb-1">Overview</p>
-                <h1 class="h3 mb-1">Administration Dashboard</h1>
+                <h1 class="h3 mb-1">Revenue Dashboard</h1>
                 <p class="text-muted mb-0">Monitor performance, sales, users, and Real-time ISP & Voucher Analytics.</p>
               </div>
             </div>
@@ -168,10 +148,14 @@
             <div class="col-12 col-sm-6 col-xl-3">
               <article class="metric-card metric-success">
                 <div class="metric-top">
-                  <span class="metric-label">Orders</span>
+                  <span class="metric-label">Total Clients revenue</span>
                   <span class="metric-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></span>
                 </div>
-                <div class="metric-value">1,284</div>
+                <div class="metric-value">
+
+    UGX {{ number_format($totalRevenue) }}
+
+</div>
                 <div class="metric-meta">
                   <span class="text-success">+8.2%</span>
                   <span>new orders</span>
@@ -182,10 +166,11 @@
             <div class="col-12 col-sm-6 col-xl-3">
               <article class="metric-card metric-warning">
                 <div class="metric-top">
-                  <span class="metric-label">Customers</span>
+                  <span class="metric-label">Comission</span>
                   <span class="metric-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
                 </div>
-                <div class="metric-value">8,742</div>
+                <div class="metric-value">UGX {{ number_format($totalCommission) }}
+</div>
                 <div class="metric-meta">
                   <span class="text-success">+5.1%</span>
                   <span>active users</span>
@@ -254,7 +239,9 @@
                 <h2 class="h5 mb-1 section-title"><i class="bi bi-people" aria-hidden="true"></i><span>Recent Vouchers</span></h2>
                 <p class="text-muted mb-0">Latest account activity across the workspace.</p>
               </div>
-              <a class="btn btn-outline-secondary btn-sm" href="users.html">Manage Users</a>
+
+
+              <a class="btn btn-outline-secondary btn-sm" href="/admin/users">Manage Users</a>
             </div>
             <div class="table-responsive">
               <table class="table align-middle mb-0">

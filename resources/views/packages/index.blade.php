@@ -38,7 +38,8 @@
                 
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
-                        <th class="p-3 text-left">Name</th>
+                        <th class="p-3 text-left">Client User</th>
+                         <th class="p-3 text-left">Name</th>
                         <th class="p-3 text-left">Price</th>
                         <th class="p-3 text-left">Duration</th>
                         <th class="p-3 text-left">Bandwidth</th>
@@ -51,6 +52,10 @@
                 <tbody>
                     @forelse($packages as $package)
                         <tr class="border-t hover:bg-gray-50">
+                            <td class="p-3 font-medium">
+                                {{ $package->user }}
+                            </td>
+
                             <td class="p-3 font-medium">
                                 {{ $package->name }}
                             </td>

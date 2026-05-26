@@ -84,8 +84,16 @@ class CheckUserStatus
         */
 
         // =========================================
-        // ALLOW ACCESS
+        // subscription 
         // =========================================
+        if (
+            $user->subscription_status === 'expired'
+        ) {
+
+            return redirect()
+                ->route('subscription.index');
+
+        }
 
         return $next($request);
     }

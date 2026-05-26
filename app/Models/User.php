@@ -35,7 +35,12 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'status'
+        'status',
+        'phone',
+        'country',
+        'subscription_status',
+        'trial_ends_at',
+        'subscription_ends_at',
     ];
 
     public function vouchers()

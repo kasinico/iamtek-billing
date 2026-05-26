@@ -9,6 +9,8 @@
         <a class="brand-mark text-decoration-none"
            href="{{ route('dashboard') }}">
 
+           
+
             <span class="brand-icon">
                 <i class="bi bi-router-fill"></i>
             </span>
@@ -59,6 +61,7 @@
 @if($role === 'shopkeeper')
 
     <div class="mt-3 font-bold text-gray-500">Shopkeeper</div>
+    
 
     <!-- Dashboard -->
 
@@ -86,6 +89,35 @@
         <div class="sidebar-label">
             OPERATIONS
         </div>
+         @if(auth()->user()->role === 'admin')
+
+            <a class="nav-link"
+            href="/admin/users">
+
+                <span class="nav-icon">
+                    <i class="bi bi-people"></i>
+                </span>
+
+                <span class="nav-text">
+                    Manage Customers 
+                </span>
+
+            </a>
+
+          <!-- <a class="nav-link {{ request()->is('subscription*') ? 'active' : '' }}"
+            href="{{ route('subscription.index') }}">
+
+                <span class="nav-icon">
+                    <i class="bi bi-credit-card"></i>
+                </span>
+
+                <span class="nav-text">
+                    Manage Subscription
+                </span>
+
+            </a> -->
+
+        @endif
 
         <a class="nav-link {{ request()->is('vouchers*') ? 'active' : '' }}"
            href="{{ route('vouchers.index') }}">
@@ -145,6 +177,39 @@
             BUSINESS
         </div>
 
+        
+        @if(auth()->user()->role === 'admin')
+
+            <a class="nav-link"
+            href="/admin/users">
+
+                <span class="nav-icon">
+                    <i class="bi bi-people"></i>
+                </span>
+
+                <span class="nav-text">
+                    Manage Customers 
+                </span>
+
+            </a>
+
+          <a class="nav-link {{ request()->is('subscription*') ? 'active' : '' }}"
+            href="{{ route('subscription.index') }}">
+
+                <span class="nav-icon">
+                    <i class="bi bi-credit-card"></i>
+                </span>
+
+                <span class="nav-text">
+                    Manage Subscription
+                </span>
+
+            </a>
+
+        @endif
+
+
+
         <a class="nav-link"
            href="#">
 
@@ -171,28 +236,29 @@
 
         </a>
 
+{{-- SHOPKEEPER MENU --}}
+@if($role === 'shopkeeper')
+
+        <a class="nav-link "
+            href="{{ route('subscription.index') }}">
+
+                <span class="nav-icon">
+                    <i class="bi bi-credit-card"></i>
+                </span>
+
+                <span class="nav-text">
+                    My Subscription
+                </span>
+
+            </a>
+@endif
         <!-- SYSTEM -->
 
         <div class="sidebar-label">
             SYSTEM
         </div>
 
-        @if(auth()->user()->role === 'admin')
-
-        <a class="nav-link"
-           href="/admin/users">
-
-            <span class="nav-icon">
-                <i class="bi bi-people"></i>
-            </span>
-
-            <span class="nav-text">
-                IAMTEK - Clients
-            </span>
-
-        </a>
-
-        @endif
+      
 
         <a class="nav-link"
            href="#">

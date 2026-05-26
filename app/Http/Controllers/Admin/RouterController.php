@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MikrotikDevice;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use RouterOS\Client;
 use RouterOS\Query;
@@ -17,8 +19,8 @@ class RouterController extends Controller
                 $query->where('user_id', auth()->id());
             })
             ->latest()
-            ->get();
-
+            ->paginate(10);
+            
         return view('routers.index', compact('routers'));
     }
 

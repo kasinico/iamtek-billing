@@ -24,6 +24,17 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
+                'phone' => [
+    'nullable',
+    'string',
+    'min:10',
+    'max:20',
+],
+
+'country' => [
+    'required',
+    'in:UG,KE,PH',
+],
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];

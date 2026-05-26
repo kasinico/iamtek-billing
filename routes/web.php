@@ -1,103 +1,5 @@
 <?php
 
-// use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\DashboardController;
-// use App\Http\Controllers\VoucherController;
-// use App\Http\Controllers\ResellerController;
-// use App\Http\Controllers\ProfileController;
-// use App\Http\Controllers\Admin\UserController;
-
-// /*
-// |--------------------------------------------------------------------------
-// | REDIRECT DASHBOARD
-// |--------------------------------------------------------------------------
-// */
-
-// Route::get('/dashboard', [DashboardController::class, 'index'])
-//     ->middleware(['auth', 'check.status'])
-//     ->name('dashboard');
-
-// /*
-// |--------------------------------------------------------------------------
-// | DASHBOARDS
-// |--------------------------------------------------------------------------
-// */
-
-// Route::middleware(['auth', 'check.status'])->group(function () {
-
-//     // Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
-//     //     ->name('admin.dashboard');
-
-//     // Route::get('/shopkeeper/dashboard', [DashboardController::class, 'shopkeeper'])
-//     //     ->name('shopkeeper.dashboard');
-// });
-
-// /*
-// |--------------------------------------------------------------------------
-// | VOUCHERS
-// |--------------------------------------------------------------------------
-// */
-
-// Route::middleware(['auth', 'check.status'])->group(function () {
-
-//     Route::get('/vouchers', [VoucherController::class, 'index']);
-//     Route::post('/vouchers/generate', [VoucherController::class, 'generate']);
-
-//     Route::get('/voucher/print/{id}', [VoucherController::class, 'printVoucher']);
-//     Route::get('/vouchers/print-batch/{id}', [VoucherController::class, 'printBatch']);
-// });
-
-// /*
-// |--------------------------------------------------------------------------
-// | USERS (ADMIN)
-// |--------------------------------------------------------------------------
-// */
-
-// Route::middleware(['auth'])->group(function () {
-
-//     Route::get('/admin/users', [UserController::class, 'index']);
-//     Route::get('/admin/users/{id}/approve', [UserController::class, 'approve']);
-//     Route::get('/admin/users/{id}/disable', [UserController::class, 'disable']);
-//     Route::get('/admin/users/{id}/enable', [UserController::class, 'enable']);
-// });
-
-// /*
-// |--------------------------------------------------------------------------
-// | WIFI + HOTSPOT
-// |--------------------------------------------------------------------------
-// */
-
-// Route::get('/wifi/login', [VoucherController::class, 'showWifiLogin']);
-// Route::post('/wifi/login', [VoucherController::class, 'processWifiLogin']);
-
-// Route::get('/hotspot/login', [VoucherController::class, 'hotspotLoginPage']);
-// Route::post('/hotspot/login', [VoucherController::class, 'processHotspotLogin']);
-
-// /*
-// |--------------------------------------------------------------------------
-// | RESSELLER
-// |--------------------------------------------------------------------------
-// */
-
-// Route::get('/reseller/register', [ResellerController::class, 'create']);
-// Route::post('/reseller/register', [ResellerController::class, 'store']);
-
-// /*
-// |--------------------------------------------------------------------------
-// | PROFILE
-// |--------------------------------------------------------------------------
-// */
-
-// Route::middleware(['auth'])->group(function () {
-
-//     Route::get('/profile', [ProfileController::class, 'edit']);
-//     Route::patch('/profile', [ProfileController::class, 'update']);
-//     Route::delete('/profile', [ProfileController::class, 'destroy']);
-// });
-
-// require __DIR__.'/auth.php';
-
-
 
 
 use Illuminate\Support\Facades\Route;
@@ -111,6 +13,8 @@ use App\Http\Controllers\Admin\RouterController;
 use App\Http\Controllers\PackageController;
 
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SubscriptionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -127,13 +31,14 @@ Route::get('/pending', function () {
 })->name('pending');
 
 
+
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATED ROUTES
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth','check.status'])->group(function () {
+Route::middleware(['auth','check.status','check.subscription'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -155,6 +60,14 @@ Route::middleware(['auth','check.status'])->group(function () {
 
         return redirect('/');
     })->name('dashboard');
+
+
+
+
+    Route::get('/subscription', function () {
+    return view('subscription.index');
+    })->name('subscription.index');
+
 
 
     /*
@@ -217,17 +130,11 @@ Route::middleware(['auth','check.status'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/admin/users', function () {
+    Route::get('/admin/users', [UserController::class, 'index'])
+    ->name('admin.users'); //admin controller for user page, client on sidebar
 
-        if (auth()->user()->role !== 'admin') {
-
-            return redirect()->route('dashboard');
-
-        }
-
-        return app(UserController::class)->index();
-
-    })->name('admin.users');
+    Route::POST('/admin/users/store', [UserController::class, 'store'])
+    ->name('admin.users.store'); //Add users/ customer on manage user sidebar
 
     Route::get('/admin/users/{id}/approve', [UserController::class,'approve'])
         ->name('admin.users.approve');
@@ -253,6 +160,20 @@ Route::middleware(['auth','check.status'])->group(function () {
 
     Route::delete('/profile', [ProfileController::class,'destroy'])
         ->name('profile.destroy');
+
+     /*
+    |--------------------------------------------------------------------------
+    | subscription routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/subscription', [SubscriptionController::class, 'index'])
+        ->name('subscription.index');
+
+    Route::post('/subscription/pay/manual/{id}', [SubscriptionController::class, 'manualActivate'])
+        ->name('subscription.manual.activate');
+
+    Route::post('/subscription/suspend/{id}', [SubscriptionController::class, 'suspend'])
+        ->name('subscription.suspend');
 
 });
 

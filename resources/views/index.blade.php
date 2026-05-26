@@ -14,7 +14,7 @@
   
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="avatar-img avatar-sm" src="../assets/images/avatar/avatar.jpg" alt=" Hasan">
+                <img class="avatar-img avatar-sm" src="../assets/images/brand/logo.png" alt=" Hasan">
                 <strong>
             {{ auth()->user()->name ?? 'IAMTEK User' }}
         </strong>

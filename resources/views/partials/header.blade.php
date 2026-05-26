@@ -80,77 +80,76 @@
             </div>
 
             <!-- PROFILE -->
+<div class="dropdown">
 
-            <div class="dropdown">
+    <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle"
+       href="#"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false"
+       style="
+            color: inherit;
+       ">
 
-                <button class="profile-button dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
+        <img src="{{ asset('assets/images/avatar/avatar-2.jpg') }}"
+             class="rounded-circle"
+             width="40"
+             height="40"
+             style="
+                width:40px;
+                height:40px;
+                object-fit:cover;
+                border:2px solid #52e7b8;
+                flex-shrink:0;
+             "
+             alt="User">
 
-                    <img class="avatar-img avatar-sm"
-                         src="{{ asset('assets/images/avatar/avatar.jpg') }}"
-                         alt="User">
+        <strong>
 
-                    <strong class="">
+            {{ auth()->user()->name ?? 'IAMTEK User' }}
 
-                        {{ auth()->user()->name ?? 'IAMTEK User' }}
+        </strong>
 
-</strong>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+
+        <li>
+
+            <a class="dropdown-item"
+               href="{{ route('profile.edit') }}">
+
+                Profile
+
+            </a>
+
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li>
+
+            <form method="POST"
+                  action="{{ route('logout') }}">
+
+                @csrf
+
+                <button type="submit"
+                        class="dropdown-item">
+
+                    Sign out
 
                 </button>
-                
 
-                <ul class="dropdown-menu dropdown-menu-end">
+            </form>
 
-                    <li>
+        </li>
 
-                        <a class="dropdown-item"
-                           href="{{ route('profile.edit') }}">
+    </ul>
 
-                            Profile
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a class="dropdown-item"
-                           href="#">
-
-                            Account settings
-
-                        </a>
-
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-
-                        <form method="POST"
-                              action="{{ route('logout') }}">
-
-                            @csrf
-
-                            <button type="submit"
-                                    class="dropdown-item">
-
-                                Sign out
-
-                            </button>
-
-                        </form>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
+</div>
         </div>
 
     </div>

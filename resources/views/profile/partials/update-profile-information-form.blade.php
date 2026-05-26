@@ -47,6 +47,63 @@
             @endif
         </div>
 
+                      <!-- PHONE -->
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        Phone Number
+
+    </label>
+
+    <input type="text"
+           name="phone"
+           class="form-control"
+           value="{{ old('phone', auth()->user()->phone) }}"
+           placeholder="+256700000000">
+
+</div>
+
+<!-- COUNTRY -->
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        Country
+
+    </label>
+
+    <select name="country"
+            class="form-select">
+
+        <option value="UG"
+            {{ auth()->user()->country == 'UG' ? 'selected' : '' }}>
+
+            Uganda
+
+        </option>
+
+        <option value="KE"
+            {{ auth()->user()->country == 'KE' ? 'selected' : '' }}>
+
+            Kenya
+
+        </option>
+
+        <option value="PH"
+            {{ auth()->user()->country == 'PH' ? 'selected' : '' }}>
+
+            Philippines
+
+        </option>
+
+    </select>
+
+</div>
+
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

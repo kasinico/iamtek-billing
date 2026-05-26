@@ -1,5 +1,4 @@
 @extends('layouts.adminhmd')
-@include('partials.header')
 
 @section('title', 'Edit Package')
 

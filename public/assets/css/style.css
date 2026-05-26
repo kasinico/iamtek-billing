@@ -1617,86 +1617,25 @@ html[data-theme="dark"] {
   color: var(--admin-sidebar-text);
 }
 
+/* PROFILE IMAGE FIX */
 
+.profile-button img {
 
-.dashboard-content {
-    min-height: auto !important;
-    padding-top: 10px !important;
-    margin-top: 0 !important;
-}
+    width: 40px !important;
+    height: 40px !important;
 
-.admin-main {
-    padding-top: 0 !important;
-}
+    min-width: 40px !important;
+    min-height: 40px !important;
 
-.container-fluid {
-    margin-top: 0 !important;
-}
+    border-radius: 50% !important;
 
+    object-fit: cover !important;
 
-/* SIDEBAR FIX */
+    display: block !important;
 
-.admin-sidebar {
+    opacity: 1 !important;
 
-    position: fixed;
-    top: 0;
-    left: 0;
+    visibility: visible !important;
 
-    width: 260px;
-    height: 100vh;
-
-    overflow-y: auto;
-
-    z-index: 1040;
-
-    transition: all 0.3s ease;
-}
-
-/* COLLAPSE */
-
-.admin-sidebar.collapsed {
-
-    width: 82px;
-}
-
-/* PAGE CONTENT */
-
-.page-wrapper {
-
-    margin-left: 260px;
-
-    min-height: 100vh;
-
-    transition: all 0.3s ease;
-}
-
-/* WHEN COLLAPSED */
-
-.admin-sidebar.collapsed + .page-wrapper {
-
-    margin-left: 82px;
-}
-
-/* TOPBAR */
-
-.admin-navbar {
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 1030;
-
-    background: #fff;
-
-    border-bottom: 1px solid #eee;
-
-    padding: 1rem;
-}
-
-/* CONTENT */
-
-.dashboard-content {
-
-    padding-top: 1rem;
+    flex-shrink: 0 !important;
 }

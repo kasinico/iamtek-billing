@@ -5,65 +5,352 @@
 
       <main class="dashboard-content">
 
-<div class="p-6 bg-gray-50 min-h-screen">
+      <!-- warning barner for the free trial -->
+@php
 
-    <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">IAMTEK Dashboard</h1>
-        <p class="text-gray-500">Real-time ISP & Voucher Analytics</p>
+    $daysLeft =
+        now()->diffInDays(
+            auth()->user()->trial_ends_at,
+            false
+        );
+
+@endphp
+
+@if(auth()->user()->subscription_status === 'trial')
+
+    <div class="alert alert-danger">
+
+        @if($daysLeft > 0)
+
+            <strong>
+
+                Free Trial Active
+
+            </strong>
+
+            —
+<!-- floor converts to float -->
+            {{ floor($daysLeft) }} days remaining. 
+
+        @else
+
+            <strong>
+
+                Trial Expired
+
+            </strong>
+
+            —
+
+            Please subscribe to continue using IAMTEK Billing.
+
+        @endif
+
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+@endif
+<!-- DASHBOARD -->
 
-        <!-- My Vouchers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
-            <p class="text-gray-500">My Vouchers.</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $myVouchers }}</h2>
-        </div>
+<div class="dashboard-overview mb-4">
 
-        <!-- Used -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-green-500">
-            <p class="text-gray-500">Used Vouchers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $usedVouchers }}</h2>
-        </div>
+    <div>
 
-        <!-- Active Sessions -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500">
-            <p class="text-gray-500">Active Users</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $activeVouchers }}</h2>
-        </div>
+        <h1 class="h3 fw-bold mb-1">
 
-        <!-- Routers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-orange-500">
-            <p class="text-gray-500">Routers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $routers }}</h2>
-        </div>
+            Hello {{ auth()->user()->name }}
+
+        </h1>
+
+        <p class="text-muted mb-0">
+
+            {{ now()->timezone('Africa/Nairobi')->format('l, d M Y • h:i A') }} EAT
+
+        </p>
 
     </div>
 
-    <!-- Analytics Section -->
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+</div>
 
-        <!-- Chart Placeholder -->
-        <div class="bg-white p-6 rounded-2xl shadow">
-            <h3 class="font-semibold mb-4">Usage Analytics</h3>
-            <div class="h-64 flex items-center justify-center text-gray-400">
-                Chart (integrate Chart.js / ApexCharts)
+<!-- STATS -->
+
+<div class="row g-4">
+
+    <!-- MY VOUCHERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card primary">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-ticket-perforated"></i>
+
             </div>
-        </div>
 
-        <!-- Activity Feed -->
-        <div class="bg-white p-6 rounded-2xl shadow">
-            <h3 class="font-semibold mb-4">Recent Activity</h3>
-            <ul class="space-y-3 text-sm text-gray-600">
-                <li>Voucher created successfully</li>
-                <li> User logged into hotspot</li>
-                <li>Router connected</li>
-            </ul>
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    My Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $myVouchers }}
+
+                </h3>
+
+            </div>
+
         </div>
 
     </div>
+
+    <!-- USED -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card success">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-check-circle"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Used Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $usedVouchers }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIVE USERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card purple">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-wifi"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Active Users
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $activeVouchers }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ROUTERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card warning">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-router-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Routers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $routers }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ANALYTICS -->
+
+<div class="row g-4 mt-1">
+
+    <!-- CHART -->
+
+    <div class="col-xl-8">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <div>
+
+                        <h5 class="fw-bold mb-1">
+
+                            Usage Analytics
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            Voucher consumption & hotspot activity
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center"
+                     style="height:300px;">
+
+                    <div class="text-center text-muted">
+
+                        <i class="bi bi-bar-chart-line fs-1"></i>
+
+                        <p class="mt-3 mb-0">
+
+                            Chart.js / ApexCharts Integration Area
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIVITY -->
+
+    <div class="col-xl-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h5 class="fw-bold mb-4">
+
+                    Recent Activity
+
+                </h5>
+
+                <div class="activity-feed">
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot bg-success"></div>
+
+                        <div>
+
+                            <strong>
+
+                                Voucher created
+
+                            </strong>
+
+                            <p class="text-muted mb-0 small">
+
+                                New hotspot voucher generated successfully.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot bg-primary"></div>
+
+                        <div>
+
+                            <strong>
+
+                                User connected
+
+                            </strong>
+
+                            <p class="text-muted mb-0 small">
+
+                                Hotspot user authenticated.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="activity-item">
+
+                        <div class="activity-dot bg-warning"></div>
+
+                        <div>
+
+                            <strong>
+
+                                Router online
+
+                            </strong>
+
+                            <p class="text-muted mb-0 small">
+
+                                MikroTik router connection active.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
@@ -212,7 +499,7 @@
                   <tr>
                     <td>
                       <div class="d-flex align-items-center gap-2">
-                        <img class="avatar-img avatar-sm" src="../assets/images/avatar/avatar-2.jpg" alt="Rafi Khan">
+                        <img class="avatar-img avatar-sm" src="../assets/images/avatar/avatar-3.jpg" alt="Rafi Khan">
                         <div>
                           <p class="fw-semibold mb-0">Rafi Khan</p>
                           <p class="text-muted small mb-0">rafi@example.com</p>

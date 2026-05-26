@@ -115,7 +115,17 @@ class VoucherController extends Controller
 
                     'batch_id' => $batch->id,
                     'created_by' => auth()->id(),
-                    'is_pushed' => 0
+                    'is_pushed' => 0,
+                    'price' => $package->price,
+
+                    'commission_percentage' => 30,
+
+                    'commission_amount' =>
+                        ($package->price * 30) / 100,
+
+                    'shopkeeper_amount' =>
+                        $package->price -
+                        (($package->price * 30) / 100),
                 ]);
 
                 //================= PUSH TO ROUTER IF SELECTED=============================

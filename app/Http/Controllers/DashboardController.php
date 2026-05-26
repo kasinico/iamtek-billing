@@ -5,29 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Voucher;
 use App\Models\VoucherSession;
 use App\Models\MikrotikDevice;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
-    // public function index()
-    // {
-    //     return view('dashboard', [
-    //         'totalVouchers' => Voucher::count(),
-    //         'usedVouchers' => Voucher::where('status', 'used')->count(),
-    //         'activeSessions' => VoucherSession::where('status', 'active')->count(),
-    //         'routers' => MikrotikDevice::count(),
-    //     ]);
-    // }
-
-    // public function admin()
-    // {
-    //     return view('admin.dashboard', [
-    //         'totalVouchers' => Voucher::count(),
-    //         'usedVouchers' => Voucher::where('status', 'used')->count(),
-    //         'activeSessions' => VoucherSession::where('status', 'active')->count(),
-    //         'routers' => MikrotikDevice::count(),
-    //         'myVouchers' => Voucher::where('created_by', auth()->id())->count(),
-    //     ]);
-    // }
+    
 
 
 public function index()
@@ -42,7 +24,7 @@ public function index()
 
         'totalRouters' => MikrotikDevice::count(),
 
-        'totalRevenue' => Voucher::sum('price'),
+        // 'totalRevenue' => Voucher::sum('price'),
 
     ];
 
@@ -80,6 +62,7 @@ public function index()
         // ROUTERS
         'routers' => MikrotikDevice::count(),
         'myRouters' => MikrotikDevice::where('user_id', auth()->id())->count(),
+        
 
 
     
@@ -91,6 +74,16 @@ public function index()
                             ->latest()
                             ->take(10)
                             ->get(),
+
+
+            'totalRevenue' => Voucher::where('status', 'used')
+                    ->sum('price'),
+                    
+        // COMMISSION
+        'totalCommission' => Voucher::where('status', 'used')
+                                ->sum('commission_amount'),
+
+        
     ]);
 }
 

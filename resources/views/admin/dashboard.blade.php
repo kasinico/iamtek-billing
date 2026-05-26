@@ -67,6 +67,90 @@
             <h2 class="text-3xl font-bold mt-2">{{ $routers }}</h2>
         </div>
 
+
+        <!-- Routers -->
+        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-orange-500">
+            <p class="text-gray-500">Total Routers</p>
+            <h2 class="text-3xl font-bold mt-2">{{ $routers }}</h2>
+        </div>
+
+
+        <div class="metric-value">
+
+    {{ $expiredAccounts }}
+
+</div>
+
+<div class="metric-label">
+
+    Expired Accounts
+
+</div>
+
+<div class="metric-value">
+
+    {{ $expiringSoon }}
+
+</div>
+
+<div class="metric-label">
+
+    Expiring Soon
+
+</div>
+
+
+<div class="metric-value">
+
+    {{ $trialAccounts }}
+
+</div>
+
+<div class="metric-label">
+
+    Trial Accounts
+
+</div>
+
+@if($user->subscription_status !== 'active')
+
+<form method="POST"
+      action="{{ route('subscription.manual.activate', $user->id) }}">
+
+    @csrf
+
+    <button class="btn btn-success btn-sm">
+
+        Activate
+
+    </button>
+
+</form>
+
+@endif
+
+
+@if($user->subscription_status === 'active')
+
+<form method="POST"
+      action="{{ route('subscription.suspend', $user->id) }}">
+
+    @csrf
+
+    <button class="btn btn-danger btn-sm">
+
+        Suspend
+
+    </button>
+
+</form>
+
+@endif
+
+
+
+
+
     </div>
 
     <!-- Analytics Section -->

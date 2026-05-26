@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Services\MikrotikPushService;
 use App\Models\MikrotikDevice;
+use App\Models\User;
+
 
 
 
@@ -16,6 +18,8 @@ class PackageController extends Controller
     
     public function index()
     {
+
+
         $packages = Package::query()
             ->when(auth()->user()->role === 'shopkeeper', function ($query) {
                 $query->where('user_id', auth()->id());

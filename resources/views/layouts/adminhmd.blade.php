@@ -26,7 +26,7 @@
           href="{{ asset('assets/css/style.css') }}">
 
 @vite([
-    'resources/css/app.css'
+    'resources/css/admin.css'
 ])
 
 </head>

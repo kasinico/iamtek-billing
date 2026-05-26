@@ -15,6 +15,69 @@
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
+ <!-- PHONE -->
+<!-- PHONE -->
+
+<div class="mt-4">
+
+    <x-input-label for="phone"
+                   :value="__('Phone Number')" />
+
+    <x-text-input id="phone"
+                  class="block mt-1 w-full"
+                  type="tel"
+                  name="phone"
+                    minlength="9"
+                    maxlength="14"
+
+  
+                  :value="old('phone')"
+                  required
+                  autocomplete="phone"
+                  placeholder="+256700000000" />
+
+    <x-input-error :messages="$errors->get('phone')"
+                   class="mt-2" />
+
+</div>
+
+<!-- COUNTRY -->
+
+<div class="mt-4">
+
+    <x-input-label for="country"
+                   :value="__('Country')" />
+
+    <select id="country"
+            name="country"
+            required
+            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+
+        <option value="UG">
+
+            Uganda
+
+        </option>
+
+        <option value="KE">
+
+            Kenya
+
+        </option>
+
+        <option value="PH">
+
+            Philippines
+
+        </option>
+
+    </select>
+
+    <x-input-error :messages="$errors->get('country')"
+                   class="mt-2" />
+
+</div>
+
 
         <!-- Password -->
         <div class="mt-4">
