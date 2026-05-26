@@ -223,18 +223,24 @@
 
         </a>
 
-        <a class="nav-link"
-           href="#">
+       
 
-            <span class="nav-icon">
-                <i class="bi bi-graph-up-arrow"></i>
-            </span>
+        <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
+   href="{{ route('reports.index') }}">
 
-            <span class="nav-text">
-                Reports
-            </span>
+    <span class="nav-icon">
 
-        </a>
+        <i class="bi bi-bar-chart-fill"></i>
+
+    </span>
+
+    <span class="nav-text">
+
+        Reports
+
+    </span>
+
+</a>
 
 {{-- SHOPKEEPER MENU --}}
 @if($role === 'shopkeeper')

@@ -47,85 +47,336 @@
     <div class="d-flex flex-column">
        
     </div>
+
+ 
 </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- totalVouchers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
-            <p class="text-gray-500">Total Vouchers.</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $totalVouchers }}</h2>
-        </div>
-<!-- new tiles start -->
-
-        <div class="bg-yellow-50 p-4 shadow rounded">
-            <div class="text-gray-500 text-sm">Unused</div>
-            <div class="text-2xl font-bold">{{ $unusedVouchers }}</div> 
-        </div>
-
-        <div class="bg-blue-50 p-4 shadow rounded">
-            <div class="text-gray-500 text-sm">Active</div>
-            <div class="text-2xl font-bold">{{ $activeVouchers }}</div>
-        </div>
-
-        <div class="bg-green-50 p-4 shadow rounded">
-            <div class="text-gray-500 text-sm">Used</div>
-            <div class="text-2xl font-bold">{{ $usedVouchers }}</div>
-        </div>
-<!-- new tiles end -->
 
 
-        <!-- My Vouchers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500">
-            <p class="text-gray-500">My Vouchers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $myVouchers }}</h2>
-        </div>
+<!-- hew new ones -->
+ <!-- ENTERPRISE METRICS -->
+<div class="row g-3 mb-4">
 
-        
+    <!-- TOTAL VOUCHERS -->
 
-        <!-- Used -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-green-500">
-            <p class="text-gray-500">Used Vouchers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $usedVouchers }}</h2>
-        </div>
+    <div class="col-md-6 col-xl-3">
 
-        <!-- Active Sessions -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500">
-            <p class="text-gray-500">Admin routers </p>
-            <h2 class="text-3xl font-bold mt-2">{{ $myRouters }}</h2>
-        </div>
+        <div class="metric-card metric-primary h-100">
 
-        <!-- Routers -->
-        <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-orange-500">
-            <p class="text-gray-500">Total Routers</p>
-            <h2 class="text-3xl font-bold mt-2">{{ $routers }}</h2>
+            <div class="metric-icon">
+
+                <i class="bi bi-ticket-perforated-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Total Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $totalVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    All generated hotspot vouchers
+
+                </small>
+
+            </div>
+
         </div>
 
     </div>
 
-    
+    <!-- UNUSED -->
 
-</div>
-  
+    <div class="col-md-6 col-xl-3">
 
-</div>
+        <div class="metric-card metric-warning h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-hourglass-split"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Unused Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $unusedVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Waiting for activation
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIVE -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-info h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-wifi"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Active Sessions
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $activeVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Connected hotspot users
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- USED -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-success h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Used Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $usedVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Successfully redeemed
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MY VOUCHERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-primary h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-person-badge-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    My Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $myVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Vouchers under your account
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- USED SALES -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-success h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-cash-stack"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Voucher Sales
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $usedVouchers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Revenue generating vouchers
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MY ROUTERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-purple h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-router-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    My Routers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $myRouters }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Routers linked to your account
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOTAL ROUTERS -->
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card metric-dark h-100">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-hdd-network-fill"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    Total Routers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $routers }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Infrastructure nodes
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
 
 
 
+
+
+<!-- hew end of new ones -->
 
       <main class="dashboard-content">
         <div class="container-fluid px-3 px-lg-4 py-4">
           <div class="page-heading">
             <div class="page-heading-copy">
-              <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
               <div>
-                <p class="eyebrow mb-1">Overview</p>
+                <!-- <p class="eyebrow mb-1">Overview</p> -->
                 <h1 class="h3 mb-1">Revenue Dashboard</h1>
                 <p class="text-muted mb-0">Monitor performance, sales, users, and Real-time ISP & Voucher Analytics.</p>
               </div>
             </div>
-            <div class="heading-actions"><button class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-download" aria-hidden="true"></i> Export</button><button class="btn btn-primary btn-sm" type="button"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i> Create Report</button></div>
           </div>
 
           <section class="row g-3 mt-1" aria-label="Dashboard metrics">

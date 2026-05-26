@@ -70,10 +70,13 @@
 </div>
 
 <!-- JS -->
-
 <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
 <script src="{{ asset('assets/js/main.js') }}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@stack('scripts')
 
 </body>
 </html>

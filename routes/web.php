@@ -14,6 +14,7 @@ use App\Http\Controllers\PackageController;
 
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ReportController;
 
 
 /*
@@ -154,6 +155,10 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
     */
     Route::get('/admin/staff', [UserController::class, 'staff'])
         ->name('admin.staff');
+
+// reports routes via controller
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
 
 
     /*
