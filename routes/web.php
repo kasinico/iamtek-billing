@@ -146,6 +146,16 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
         ->name('admin.users.enable');
 
 
+
+     /*
+    |--------------------------------------------------------------------------
+    | STAFF/ADMIN MANAGE STAFF PAGE
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/admin/staff', [UserController::class, 'staff'])
+        ->name('admin.staff');
+
+
     /*
     |--------------------------------------------------------------------------
     | PROFILE

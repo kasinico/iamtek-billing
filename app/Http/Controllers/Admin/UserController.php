@@ -156,5 +156,14 @@ public function store(Request $request)
             'User has been created successfully.'
         );
     }
+// Manage staff admin that will be assigned
+    public function staff(Request $request)
+    {
+        $users = User::where('role', 'admin')
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.staff', compact('users'));
+    }
 
 }

@@ -92,14 +92,14 @@
          @if(auth()->user()->role === 'admin')
 
             <a class="nav-link"
-            href="/admin/users">
+            href="/admin/staff">
 
                 <span class="nav-icon">
                     <i class="bi bi-people"></i>
                 </span>
 
                 <span class="nav-text">
-                    Manage Customers 
+                    Manage Staff 
                 </span>
 
             </a>
