@@ -160,6 +160,10 @@
                     <th scope="col">
                         Created
                     </th>
+                    <th scope="col">
+                        Expires
+                    </th>
+
 
                     <th scope="col"
                         class="text-end">
@@ -284,6 +288,29 @@
                             {{ $voucher->created_at->format('d M Y H:i') }}
 
                         </td>
+                         <!-- expired -->
+
+                       <td>
+
+    @if($voucher->expires_at)
+
+        <span class="badge text-bg-info">
+
+            {{ $voucher->expires_at->format('d M Y H:i') }}
+
+        </span>
+
+    @else
+
+        <span class="badge text-bg-secondary">
+
+            Pending Activation
+
+        </span>
+
+    @endif
+
+</td>
 
                         <!-- ACTIONS -->
 

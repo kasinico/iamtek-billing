@@ -57,11 +57,14 @@ class MikrotikDevice extends Model
 
     // linking user to routers table
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
 
-
+    public function metrics()
+    {
+        return $this->hasOne(RouterMetric::class);
+    }
 
 
 }

@@ -122,6 +122,7 @@
 
             </div>
 
+
             <div class="metric-content">
 
                 <small class="metric-label">
@@ -175,7 +176,9 @@
     </div>
 
 </div>
-
+@if(auth()->user()->role === 'admin')
+    <!-- Your HTML code for admin reports goes here -->
+    
 <!-- CHARTS -->
 
 <div class="row g-4">
@@ -248,6 +251,89 @@
 
 </div>
 
+@elseif(auth()->user()->role === 'shopkeeper')
+    <!-- Manager Content -->
+<h5 class="fw-bold mb-4">
+
+    WiFi User Activity
+
+</h5>
+
+
+<!-- isp client reports ------------------------------------------->
+
+
+<div class="row g-4">
+
+    <!-- REVENUE ANALYTICS -->
+
+    <div class="col-xl-8">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <div>
+
+                        <h5 class="fw-bold mb-1">
+
+                            Revenue Analytics
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            Monthly hotspot revenue trends.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div style="height:350px;">
+
+                    <canvas id="revenueChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        
+
+    </div>
+      <div class="col-xl-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h5 class="fw-bold mb-4">
+
+    WiFi User Activity
+
+</h5>
+
+                <div style="height:350px;">
+
+                    <canvas id="customerChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+@endif
+
+
+
 @endsection
 
 @push('scripts')
@@ -277,17 +363,23 @@ new Chart(revenueCtx, {
             'Dec'
         ],
 
-        datasets: [{
+       datasets: [{
 
-            label: 'Revenue',
+    label: 'Revenue (UGX)',
 
-            data: [50, 190, 300, 500, 700],
+    data: @json($monthlyRevenue),
 
-            borderWidth: 3,
+    borderColor: '#05096F',
 
-            tension: 0.4
+    backgroundColor: 'rgba(5,9,111,0.1)',
 
-        }]
+    fill: true,
+
+    borderWidth: 3,
+
+    tension: 0.4
+
+}]
 
     }
 
@@ -305,14 +397,67 @@ new Chart(customerCtx, {
         labels: [
             'Active',
             'Trial',
-            'Suspended'
+            'Suspended',
+            // 'expired'
         ],
 
         datasets: [{
 
-            data: [70, 20, 10]
+    data: @json($customerStats),
 
-        }]
+    backgroundColor: [
+
+        '#198754',
+        '#ffc107',
+        '#dc3545',
+        '#dc5987'
+
+    ],
+
+    borderWidth: 0
+
+}]
+
+    }
+
+});
+
+// isp client wifi bars
+const customerWifi =
+document.getElementById('customerWifi');
+
+new Chart(customerCtx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: [
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu',
+            'Fri',
+            'Sat',
+            'Sun'
+        ],
+
+        datasets: [{
+
+    data: @json($customerStats),
+
+    backgroundColor: [
+
+        '#198754',
+        '#ffc107',
+        '#dc3545',
+        '#dc5987'
+
+    ],
+
+    borderWidth: 0
+
+}]
 
     }
 

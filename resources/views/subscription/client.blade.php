@@ -198,24 +198,51 @@
 <br>
 <div class="col-md-3">
 
-    <div class="card shadow-sm border-0">
+@php
 
-        <div class="card-body">
+$daysLeft = null;
 
-            <small class="text-muted">
+if(auth()->user()->subscription_ends_at){
 
-                Active Subscriptionss
+    $daysLeft =
+        now()->diffInDays(
+            auth()->user()->subscription_ends_at,
+            false
+        );
 
-            </small>
+}
 
-            <h3 class="fw-bold">
+@endphp
 
+   <div class="alert alert-info mt-3">
 
-            </h3>
+    @if($daysLeft > 0)
 
-        </div>
+        <strong>
 
-    </div>
+            Subscription Active
+
+        </strong>
+
+        —
+
+        {{ floor($daysLeft) }} days remaining.
+
+    @elseif($daysLeft <= 0)
+
+        <strong>
+
+            Subscription Expired
+
+        </strong>
+
+        —
+
+        Please renew to continue service.
+
+    @endif
+
+</div>
 
 </div>
 
