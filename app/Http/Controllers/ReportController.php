@@ -32,6 +32,27 @@ class ReportController extends Controller
             MikrotikDevice::where('is_active', 1)
                 ->count();
 
+        $customerStats = [
+
+    'active' => User::where(
+        'subscription_status',
+        'active'
+    )->count(),
+
+    'trial' => User::where(
+        'subscription_status',
+        'trial'
+    )->count(),
+
+    'suspended' => User::whereIn(
+        'subscription_status',
+        ['expired', 'suspended']
+    )->count(),
+
+];
+
+
+
         
         }
         // client reports
@@ -129,26 +150,33 @@ class ReportController extends Controller
                 ? 1 : 0;
         }
 
+        if(auth()->user()->role === 'admin') {
 
-        return view('reports.index', [
+            return view('reports.admin', compact(
 
-            'totalRevenue' => $totalRevenue,
+                'totalRevenue',
+                'voucherSales',
+                'customerGrowth',
+                'activeRouters',
+                'monthlyRevenue',
+                'customerStats' 
 
-            'voucherSales' => $voucherSales,
+            ));
 
-            'customerGrowth' => $customerGrowth,
+        }
 
-            'activeRouters' => $activeRouters,
-            'monthlyRevenue' => $monthlyRevenue,
+        return view('reports.clients', compact(
 
-            'customerStats' => [
+            'totalRevenue',
+            'voucherSales',
+            'activeRouters',
+            'monthlyRevenue'
 
-                $activeCustomers,
-                $trialCustomers,
-                $suspendedCustomers
+        ));
 
-            ],
+        //  return view('reports.clients');
 
-        ]);
+
+       
     }
 }

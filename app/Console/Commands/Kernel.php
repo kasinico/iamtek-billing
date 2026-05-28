@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\MikrotikTest::class,
         \App\Console\Commands\SyncHotspotUsers::class,
         \App\Console\Commands\ExpireVouchers::class, // 🔥 ADD THIS
+        \App\Console\Commands\PollRouters::class,
 
     ];
 
@@ -25,6 +26,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('hotspot:sync')->everyMinute();
 
         $schedule->command('vouchers:expire')->everyMinute();
+        $schedule->command('routers:poll')
+            ->everyFiveMinutes();
         //
     }
 

@@ -15,6 +15,8 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CustomerController;
+
 
 
 /*
@@ -159,6 +161,7 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
 // reports routes via controller
     Route::get('/reports', [ReportController::class, 'index'])
         ->name('reports.index');
+        
 
 
     /*
@@ -189,6 +192,27 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
 
     Route::post('/subscription/suspend/{id}', [SubscriptionController::class, 'suspend'])
         ->name('subscription.suspend');
+
+
+/*
+|--------------------------------------------------------------------------
+| CUSTOMERS
+|--------------------------------------------------------------------------
+*/
+
+Route::resource(
+    'customers',
+    CustomerController::class
+)->only([
+
+    'index',
+    'update',
+    'destroy'
+
+]);
+
+
+
 
 });
 

@@ -176,7 +176,6 @@
     </div>
 
 </div>
-@if(auth()->user()->role === 'admin')
     <!-- Your HTML code for admin reports goes here -->
     
 <!-- CHARTS -->
@@ -251,7 +250,6 @@
 
 </div>
 
-@elseif(auth()->user()->role === 'shopkeeper')
     <!-- Manager Content -->
 <h5 class="fw-bold mb-4">
 
@@ -330,7 +328,6 @@
 
     </div>
 
-@endif
 
 
 

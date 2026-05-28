@@ -288,29 +288,59 @@
                             {{ $voucher->created_at->format('d M Y H:i') }}
 
                         </td>
+
+
+
                          <!-- expired -->
-
                        <td>
+                        
+@if($voucher->status === 'unused')
 
-    @if($voucher->expires_at)
+    <span class="badge text-bg-warning">
 
-        <span class="badge text-bg-info">
+        Pending Activation
 
-            {{ $voucher->expires_at->format('d M Y H:i') }}
+    </span>
 
-        </span>
+@elseif($voucher->status === 'active')
 
-    @else
+    <span class="badge text-bg-primary">
 
-        <span class="badge text-bg-secondary">
+        Active Session
 
-            Pending Activation
+    </span>
 
-        </span>
+@elseif($voucher->status === 'used')
 
-    @endif
+    <span class="badge text-bg-success">
 
-</td>
+        Used & Expired
+
+    </span>
+
+@endif
+
+
+
+                            <!-- @if($voucher->expires_at)
+
+                                <span class="badge text-bg-info">
+
+                                    {{ $voucher->expires_at->format('d M Y H:i') }}
+
+                                </span>
+
+                            @else
+
+                                <span class="badge text-bg-secondary">
+
+                                    Pending Activation
+
+                                </span>
+
+                            @endif -->
+
+                        </td>
 
                         <!-- ACTIONS -->
 

@@ -7,6 +7,8 @@ use App\Models\VoucherSession;
 use App\Models\MikrotikDevice;
 use App\Models\User;
 
+use App\Models\RouterStatus;
+
 class DashboardController extends Controller
 {
     
@@ -25,8 +27,13 @@ public function index()
         'totalRouters' => MikrotikDevice::count(),
 
         // 'totalRevenue' => Voucher::sum('price'),
+        
 
     ];
+
+    
+
+
 
     if ($role === 'admin') {
 
@@ -40,7 +47,38 @@ public function index()
 
     public function admin()
 {
+    /* |-------------------------------------------------------------------------- 
+        | LIVE ROUTER STATUS TABLE 
+        |-------------------------------------------------------------------------- */ 
+    $routerStatuses = RouterStatus::latest()
+     ->take(10)
+      ->get();
+
+    $onlineRouters =
+    RouterStatus::where(
+        'is_online',
+        true
+    )->count();
+
+$offlineRouters =
+    RouterStatus::where(
+        'is_online',
+        false
+    )->count();
+
+$activeHotspotUsers =
+    RouterStatus::sum(
+        'active_hotspot_users'
+    );
+
+$avgCpuLoad =
+    RouterStatus::avg(
+        'cpu_load'
+    );
+
     return view('dashboards.admin', [
+
+
 
         // TOTAL
         'totalVouchers' => \App\Models\Voucher::count(),
@@ -62,13 +100,21 @@ public function index()
         // ROUTERS
         'routers' => MikrotikDevice::count(),
         'myRouters' => MikrotikDevice::where('user_id', auth()->id())->count(),
+
+        
+'onlineRouters' => $onlineRouters,
+'offlineRouters' => $offlineRouters,
+'activeHotspotUsers' => $activeHotspotUsers,
+'avgCpuLoad' => round($avgCpuLoad),
+'routerStatuses' => $routerStatuses,
+
+
         
 
 
     
         
 
-        // 🔥 RECENT VOUCHERS (IMPORTANT)
         // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
         'recentVouchers' => Voucher::where('created_by', auth()->id())
                             ->latest()
@@ -76,12 +122,21 @@ public function index()
                             ->get(),
 
 
-            'totalRevenue' => Voucher::where('status', 'used')
-                    ->sum('price'),
+            
+'totalRevenue' => Voucher::where(
+      
+        'status',
+        'used'
+    )
+    ->sum('price'),
+
+
                     
         // COMMISSION
-        'totalCommission' => Voucher::where('status', 'used')
-                                ->sum('commission_amount'),
+        'totalCommission' => Voucher::where(
+            'status', 
+            'used'
+            ) ->sum('commission_amount'),
 
         
     ]);
@@ -105,7 +160,15 @@ public function index()
             // -----------------------------------
             'myVouchers' => Voucher::where('created_by', auth()->id())->count(),
             
-            'activeVouchers' => Voucher::where('created_by','status', 'active')->count(),
+            'activeVouchers' => Voucher::where(
+                'created_by',
+                auth()->id()
+            )
+            ->where(
+                'status',
+                'active'
+            )
+                ->count(),
 
             'usedVouchers' => Voucher::where('created_by', auth()->id()) //will merge with used up
                                     ->where('status','used')

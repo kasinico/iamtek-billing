@@ -60,7 +60,7 @@
 {{-- SHOPKEEPER MENU --}}
 @if($role === 'shopkeeper')
 
-    <div class="mt-3 font-bold text-gray-500">Shopkeeper</div>
+    <!-- <div class="mt-3 font-bold text-gray-500">Shopkeeper</div> -->
     
 
     <!-- Dashboard -->
@@ -222,6 +222,27 @@
             </span>
 
         </a>
+
+
+        <!-- customer modal -->
+<a class="nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
+   href="{{ route('customers.index') }}">
+
+    <span class="nav-icon">
+
+        <i class="bi bi-people-fill"></i>
+
+    </span>
+
+    <span class="nav-text">
+
+        Customers
+
+    </span>
+
+</a>
+
+
 
        
 

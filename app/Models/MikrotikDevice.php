@@ -66,5 +66,13 @@ class MikrotikDevice extends Model
         return $this->hasOne(RouterMetric::class);
     }
 
+    
+    public function status()
+    {
+        return $this->hasOne(RouterStatus::class);
+    }
+
+
+
 
 }

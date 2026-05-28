@@ -1,1 +1,26 @@
 /* IAMTEK Admin CSS */
+
+:root {
+
+    --iamtek-primary: #05096F;
+    --iamtek-success: #198754;
+    --iamtek-warning: #ffc107;
+    --iamtek-danger: #dc3545;
+    --iamtek-purple: #6f42c1;
+    --iamtek-dark: #212529;
+
+}
+
+
+.page-icon {
+    background: linear-gradient(
+        135deg,
+        #FD8127,
+        #ff9f45
+    );
+}
+
+
+.table tbody tr:hover {
+    background-color: rgba(253,129,39,.06);
+}

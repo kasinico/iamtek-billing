@@ -28,6 +28,25 @@ class Voucher extends Model
 
     ];
 
+
+/*
+|--------------------------------------------------------------------------
+| CASTS
+|--------------------------------------------------------------------------
+*/
+
+protected $casts = [
+
+    'expires_at' => 'datetime',
+
+    'activated_at' => 'datetime',
+
+    'used_at' => 'datetime',
+
+];
+
+
+
     /**
      * Router relationship
      */

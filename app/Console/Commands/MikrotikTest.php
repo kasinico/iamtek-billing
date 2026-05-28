@@ -8,6 +8,7 @@ use RouterOS\Query;
 use App\Models\MikrotikDevice;
 use App\Models\Voucher;
 
+// testing the router API connection web to devices
 class MikrotikTest extends Command
 {
     protected $signature = 'mikrotik:test';
@@ -16,11 +17,11 @@ class MikrotikTest extends Command
     public function handle()
     {
         $client = new Client([
-            'host' => '192.168.100.1',
-            'user' => 'iamtek',
+            'host' => '192.168.20.1',
+            'user' => 'admin',
             'pass' => 'admin',
             'port' => 8728,
-            'legacy' => true
+            'legacy' => false
         ]);
 
         $query = new Query('/system/identity/print');
