@@ -161,6 +161,10 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
 // reports routes via controller
     Route::get('/reports', [ReportController::class, 'index'])
         ->name('reports.index');
+
+        //  COMMISSION REPORT
+    Route::get( '/reports/commissions', [ReportController::class, 'commissions'] )
+        ->name('reports.commissions');
         
 
 

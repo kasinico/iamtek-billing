@@ -80,4 +80,20 @@ protected $casts = [
 
         return $query->where('user_id', auth()->id());
     }
+
+/*
+|--------------------------------------------------------------------------
+| VOUCHER OWNER
+|--------------------------------------------------------------------------
+*/
+
+    public function creator()
+    {
+        return $this->belongsTo(
+            \App\Models\User::class,
+            'created_by'
+        );
+    }
+
+
 }

@@ -22,7 +22,7 @@
 
             <h1 class="h3 mb-1">
 
-                Manage Customers
+                Manage Staff
 
             </h1>
 
@@ -46,7 +46,7 @@
 
             <i class="bi bi-person-plus"></i>
 
-            Add Client
+            Add Staff
 
         </button>
 
@@ -362,7 +362,7 @@ searchInput.addEventListener('input', function () {
 
                 <h5 class="modal-title">
 
-                    Add Client
+                    Add Staff
 
                 </h5>
 
@@ -542,7 +542,7 @@ searchInput.addEventListener('input', function () {
 
                     <button class="btn btn-primary">
 
-                        Create Client
+                        Create Staff
 
                     </button>
 

@@ -179,4 +179,49 @@ class ReportController extends Controller
 
        
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOPKEEPER SALES PERFORMANCE
+    |--------------------------------------------------------------------------
+    |
+    | Admin can see:
+    | - Revenue generated
+    | - Commission earned by platform
+    | - Earnings due to shopkeeper
+    | - Number of vouchers sold
+    |
+    */
+
+    public function commissions()
+    {
+        $sales = Voucher::selectRaw('
+
+            created_by,
+
+            COUNT(*) as vouchers_sold,
+
+            SUM(price) as revenue,
+
+            SUM(commission_amount) as commission,
+
+            SUM(shopkeeper_amount) as earnings
+
+        ')
+        ->whereIn(
+            'status',
+            ['used', 'expired']
+        )
+        ->groupBy('created_by')
+        ->with('creator')
+        ->get();
+
+        return view(
+            'reports.commissions',
+            compact('sales')
+        );
+    }
+
+
+
 }

@@ -22,7 +22,7 @@
 
             <h1 class="h3 mb-1">
 
-                Manage Customers
+                Manage ISP Clients
 
             </h1>
 

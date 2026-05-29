@@ -188,7 +188,7 @@
                 </span>
 
                 <span class="nav-text">
-                    Manage Customers 
+                    Manage ISP Clients 
                 </span>
 
             </a>
@@ -201,27 +201,10 @@
                 </span>
 
                 <span class="nav-text">
-                    Manage Subscription
+                    ISP Subscriptions
                 </span>
 
             </a>
-
-        @endif
-
-
-
-        <a class="nav-link"
-           href="#">
-
-            <span class="nav-icon">
-                <i class="bi bi-cash-stack"></i>
-            </span>
-
-            <span class="nav-text">
-                Transactions
-            </span>
-
-        </a>
 
 
         <!-- customer modal -->
@@ -236,32 +219,64 @@
 
     <span class="nav-text">
 
-        Customers
+        Wifi Users
 
     </span>
 
 </a>
 
+        @endif
 
+     <a class="nav-link"
+           href="#">
+
+            <span class="nav-icon">
+                <i class="bi bi-cash-stack"></i>
+            </span>
+
+            <span class="nav-text">
+                Transactions
+            </span>
+
+     </a>
+
+
+@if($role === 'admin')
 
        
+<li class="nav-item dropdown">
+    <!-- Dropdown Toggle Button -->
+    <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}" 
+       href="#" 
+       id="accountingDropdown" 
+       role="button" 
+       data-bs-toggle="dropdown" 
+       aria-expanded="false">
+        <span class="nav-icon">
+            <i class="bi bi-calculator"></i> <!-- Accounting Icon -->
+        </span>
+        <span class="nav-text">Accounting</span>
+    </a>
 
-        <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
-   href="{{ route('reports.index') }}">
+    <!-- Dropdown Menu Items -->
+    <ul class="dropdown-menu" aria-labelledby="accountingDropdown">
+        <li>
+            <a class="dropdown-item {{ request()->routeIs('reports.index') ? 'active' : '' }}" 
+               href="{{ route('reports.index') }}">
+                <i class="bi bi-bar-chart-fill me-2"></i> General Reports
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item {{ request()->routeIs('reports.commissions') ? 'active' : '' }}" 
+               href="{{ route('reports.commissions') }}">
+                <i class="bi bi-cash-stack me-2"></i> Commission Reports
+            </a>
+        </li>
+    </ul>
+</li>
 
-    <span class="nav-icon">
 
-        <i class="bi bi-bar-chart-fill"></i>
-
-    </span>
-
-    <span class="nav-text">
-
-        Reports
-
-    </span>
-
-</a>
+@endif
 
 {{-- SHOPKEEPER MENU --}}
 @if($role === 'shopkeeper')
