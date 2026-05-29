@@ -52,9 +52,37 @@
                 <tbody>
                     @forelse($packages as $package)
                         <tr class="border-t hover:bg-gray-50">
-                            <td class="p-3 font-medium">
-                                {{ $package->user }}
-                            </td>
+                                                   <!-- LINKED ACCOUNT -->
+
+<td class="ps-4">
+
+    <div class="d-flex align-items-center gap-2">
+
+        <img src="{{ asset('assets/images/avatar/avatar-1.jpg') }}"
+             class="rounded-circle"
+             width="40"
+             height="40"
+             style="object-fit:cover;">
+
+        <div>
+
+            <div class="fw-semibold">
+
+                {{ $package->user->name ?? 'Unassigned' }}
+
+            </div>
+
+            <small class="text-muted">
+
+                {{ ucfirst($package->user->role ?? 'No Role') }}
+
+            </small>
+
+        </div>
+
+    </div>
+
+</td>
 
                             <td class="p-3 font-medium">
                                 {{ $package->name }}

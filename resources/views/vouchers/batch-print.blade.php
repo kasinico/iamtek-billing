@@ -66,9 +66,10 @@ IAMTEK WIFI
 <b>Password {{ $voucher->password }}</b>
 
 <br>
-Package
+Package: {{ $voucher->package->name }}
+
 <br>
-{{ $voucher->package->name }}
+Price {{ $voucher->package->price }}
 
 <br>
 

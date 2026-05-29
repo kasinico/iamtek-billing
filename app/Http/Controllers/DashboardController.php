@@ -102,18 +102,12 @@ $avgCpuLoad =
         'myRouters' => MikrotikDevice::where('user_id', auth()->id())->count(),
 
         
-'onlineRouters' => $onlineRouters,
-'offlineRouters' => $offlineRouters,
-'activeHotspotUsers' => $activeHotspotUsers,
-'avgCpuLoad' => round($avgCpuLoad),
-'routerStatuses' => $routerStatuses,
+        'onlineRouters' => $onlineRouters,
+        'offlineRouters' => $offlineRouters,
+        'activeHotspotUsers' => $activeHotspotUsers,
+        'avgCpuLoad' => round($avgCpuLoad, 1),
+        'routerStatuses' => $routerStatuses,
 
-
-        
-
-
-    
-        
 
         // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
         'recentVouchers' => Voucher::where('created_by', auth()->id())
@@ -121,22 +115,18 @@ $avgCpuLoad =
                             ->take(10)
                             ->get(),
 
-
             
-'totalRevenue' => Voucher::where(
-      
-        'status',
-        'used'
-    )
-    ->sum('price'),
-
+        'totalRevenue' => Voucher::whereIn(
+            'status',
+            ['used', 'expired']
+        )->sum('price'),
 
                     
         // COMMISSION
-        'totalCommission' => Voucher::where(
-            'status', 
-            'used'
-            ) ->sum('commission_amount'),
+        'totalCommission' => Voucher::whereIn(
+            'status',
+            ['used', 'expired']
+        )->sum('commission_amount'),
 
         
     ]);
@@ -176,6 +166,18 @@ $avgCpuLoad =
             // 'activeSessions' => VoucherSession::where('status', 'active')->count(),
             // 'routers' => MikrotikDevice::count(),
             'routers' => MikrotikDevice::where('user_id', auth()->id())->count(),
+
+            'totalRevenue' => Voucher::where(
+        'created_by',
+        auth()->id()
+    )
+    ->whereIn(
+        'status',
+        ['used', 'expired']
+    )
+    ->sum('price'),
+
+
                     // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),
 
         ]);

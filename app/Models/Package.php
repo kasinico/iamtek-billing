@@ -39,4 +39,38 @@ class Package extends Model
             default => $this->duration,
         };
     }
+
+
+/*
+|--------------------------------------------------------------------------
+| OWNER
+|--------------------------------------------------------------------------
+*/
+
+ // linking user to routers table
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    // linking user to routers table
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function metrics()
+    {
+        return $this->hasOne(RouterMetric::class);
+    }
+
+    
+    public function status()
+    {
+        return $this->hasOne(RouterStatus::class);
+    }
+
+
+
 }

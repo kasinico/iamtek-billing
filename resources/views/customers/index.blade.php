@@ -120,11 +120,12 @@ TABLE
 
                     <tr>
 
-                        <th>Name</th>
+                        <th>Voucher ID</th>
                         <th>Phone</th>
                         <th>Package</th>
                         <th>Router</th>
                         <th>Status</th>
+                        <th>MAC Address  </th>
                         <th>Expiry</th>
                         <th class="text-end">Actions</th>
 
@@ -191,6 +192,8 @@ TABLE
                                 @endif
 
                             </td>
+                            <td>  {{ $customer->mac_address ?? '-' }}
+  </td>
 
                             <td>
 

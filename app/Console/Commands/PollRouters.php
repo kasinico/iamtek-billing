@@ -66,6 +66,7 @@ public function handle()
 
             $resource =
                 $client->query($resourceQuery)->read();
+                print_r($resource);
 
             /*
             |--------------------------------------------------------------------------

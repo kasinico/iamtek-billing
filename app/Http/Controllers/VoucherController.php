@@ -101,6 +101,16 @@ class VoucherController extends Controller
 
             for ($i = 0; $i < $validated['quantity']; $i++) {
 
+                $commissionPercentage = 30;
+
+                $commissionAmount =
+                    ($package->price * $commissionPercentage) / 100;
+
+                $shopkeeperAmount =
+                    $package->price - $commissionAmount;
+
+                    // dd($package->id, $package->price);
+
                 $voucher = Voucher::create([
                     'code'     => $this->voucherService->generateCode(),
                     'username' => $this->voucherService->generateUsername(),
@@ -118,14 +128,11 @@ class VoucherController extends Controller
                     'is_pushed' => 0,
                     'price' => $package->price,
 
-                    'commission_percentage' => 30,
+                    'commission_percentage' => $commissionPercentage,
 
-                    'commission_amount' =>
-                        ($package->price * 30) / 100,
+                    'commission_amount' => $commissionAmount,
 
-                    'shopkeeper_amount' =>
-                        $package->price -
-                        (($package->price * 30) / 100),
+                    'shopkeeper_amount' => $shopkeeperAmount,
                 ]);
 
                 //================= PUSH TO ROUTER IF SELECTED=============================
@@ -224,45 +231,207 @@ class VoucherController extends Controller
     }
 
 
-    public function hotspotLogin(Request $request)
-    {
-    $voucher = Voucher::where('code', $request->code)->first();
+//     public function hotspotLogin(Request $request)
+//     {
+//     $voucher = Voucher::where('code', $request->code)->first();
+    
+// if (!$voucher->activated_at) {
+
+//     $voucher->activated_at = now();
+
+//     if ($voucher->package) {
+
+//         $voucher->expires_at = now()->addHours(
+//             $voucher->package->duration_in_hours
+//         );
+
+//     }
+
+// }
+
+
+
+//     if (!$voucher) {
+//         return response()->json(['error' => 'Invalid voucher']);
+//     }
+
+//     if ($voucher->status == 'expired') {
+//         return response()->json(['error' => 'Voucher expired']);
+//     }
+
+//     if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
+//         $voucher->update(['status' => 'expired']);
+//         return response()->json(['error' => 'Voucher expired']);
+//     }
+
+//     // CREATE SESSION
+//     VoucherSession::create([
+//         'voucher_id' => $voucher->id,
+//         'voucher_code' => $voucher->code,
+//         'ip_address' => $request->ip(),
+//         'mac_address' => $request->mac ?? null,
+//         'router_id' => $voucher->router_id,
+//         'login_at' => now(),
+//         'status' => 'active'
+//     ]);
+
+//     // MARK VOUCHER AS USED
+//     $voucher->update([
+//             'status' => 'active',
+//             'activated_at' =>
+//                 $voucher->activated_at ?? now(),
+//             'phone_number' =>
+//                  $request->phone ?? null
+//     ]);
+
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Login successful'
+//     ]);
+//     }
+
+    
+public function hotspotLogin(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | FIND VOUCHER
+    |--------------------------------------------------------------------------
+    */
+
+    $voucher = Voucher::where(
+        'code',
+        $request->code
+    )->first();
+
+    /*
+    |--------------------------------------------------------------------------
+    | INVALID
+    |--------------------------------------------------------------------------
+    */
 
     if (!$voucher) {
-        return response()->json(['error' => 'Invalid voucher']);
+
+        return response()->json([
+
+            'error' => 'Invalid voucher'
+
+        ]);
+
     }
 
-    if ($voucher->status == 'expired') {
-        return response()->json(['error' => 'Voucher expired']);
+    /*
+    |--------------------------------------------------------------------------
+    | EXPIRED
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+        $voucher->expires_at
+
+        &&
+
+        now()->gt($voucher->expires_at)
+
+    ) {
+
+        $voucher->update([
+
+            'status' => 'used'
+
+        ]);
+
+        return response()->json([
+
+            'error' => 'Voucher expired'
+
+        ]);
+
     }
 
-    if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
-        $voucher->update(['status' => 'expired']);
-        return response()->json(['error' => 'Voucher expired']);
+    /*
+    |--------------------------------------------------------------------------
+    | FIRST ACTIVATION
+    |--------------------------------------------------------------------------
+    */
+
+    if (!$voucher->activated_at) {
+
+        $voucher->activated_at = now();
+
+        if ($voucher->package) {
+
+            $voucher->expires_at = now()->addHours(
+
+                $voucher->package->duration_in_hours
+
+            );
+
+        }
+
     }
 
-    // CREATE SESSION
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE SESSION
+    |--------------------------------------------------------------------------
+    */
+
     VoucherSession::create([
+
         'voucher_id' => $voucher->id,
+
         'voucher_code' => $voucher->code,
+
         'ip_address' => $request->ip(),
-        'mac_address' => $request->mac ?? null,
-        'router_id' => $voucher->router_id,
+
+        'mac_address' =>
+            $request->mac ?? null,
+
+        'router_id' =>
+            $voucher->router_id,
+
         'login_at' => now(),
+
         'status' => 'active'
+
     ]);
 
-    // MARK VOUCHER AS USED
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE VOUCHER
+    |--------------------------------------------------------------------------
+    */
+
     $voucher->update([
-        'status' => 'used',
-        'used_at' => now()
+
+        'status' => 'active',
+
+        'activated_at' =>
+            $voucher->activated_at,
+
+        'phone_number' =>
+            $request->phone ?? null
+
     ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUCCESS
+    |--------------------------------------------------------------------------
+    */
 
     return response()->json([
+
         'success' => true,
+
         'message' => 'Login successful'
+
     ]);
-    }
+}
+
+
 
     public function hotspotLoginPage(Request $request)
         {
@@ -284,15 +453,32 @@ class VoucherController extends Controller
             return back()->with('error', 'Invalid voucher');
         }
 
-        if ($voucher->status !== 'unused') {
-        return back()->with('error', 'Voucher already used');
-        }
+        // if ($voucher->status !== 'unused') {
+        // return back()->with('error', 'Voucher already used');
+        // }
 
-        if ($voucher->expires_at && now()->gt($voucher->expires_at)) {
-            $voucher->update(['status' => 'expired']);
-            return back()->with('error', 'Voucher expired');
-        }
+        
+        /*
+        |--------------------------------------------------------------------------
+        | EXPIRED CHECK
+        |--------------------------------------------------------------------------
+        */
 
+        if (
+            $voucher->expires_at
+            &&
+            now()->gt($voucher->expires_at)
+        ) {
+            $voucher->update([
+                'status' => 'used'
+            ]);
+
+            return back()->with(
+                'error',
+                'Voucher expired'
+            );
+        }
+      
         // Create session tracking
         VoucherSession::create([
             'voucher_id' => $voucher->id,
@@ -306,9 +492,11 @@ class VoucherController extends Controller
 
         // mark voucher used
         $voucher->update([
-            'status' => 'used',
-            'used_at' => now(),
-            'phone_number' => $request->phone
+            'status' => 'active',
+            'activated_at' =>
+                $voucher->activated_at ?? now(),
+            'phone_number' =>
+                 $request->phone ?? null
         ]);
 
         // 🔥 REDIRECT TO MIKROTIK AUTH
