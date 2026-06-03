@@ -24,6 +24,11 @@ class Voucher extends Model
         'sync_error',
         'batch_id',
         'created_by',
+        'price',
+
+        'commission_percentage',
+        'commission_amount',
+        'shopkeeper_amount',
 
 
     ];
@@ -42,6 +47,12 @@ protected $casts = [
     'activated_at' => 'datetime',
 
     'used_at' => 'datetime',
+    
+     'price' => 'decimal:2',
+
+    'commission_amount' => 'decimal:2',
+
+    'shopkeeper_amount' => 'decimal:2',
 
 ];
 
@@ -94,6 +105,16 @@ protected $casts = [
             'created_by'
         );
     }
+
+    // reusable scope in Voucher model
+
+    public function scopeRevenueEligible($query)
+{
+    return $query->whereIn(
+        'status',
+        ['active', 'expired']
+    );
+}
 
 
 }

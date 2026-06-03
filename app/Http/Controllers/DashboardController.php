@@ -141,8 +141,11 @@ $avgCpuLoad =
             'total' => Voucher::where('created_by', $user->id)->count(),
             'active' => Voucher::where('created_by', $user->id)
                     ->where('status', 'active')->count(),
+            // 'used' => Voucher::where('created_by', $user->id)
+            //         ->where('status', 'used')->count(),
             'used' => Voucher::where('created_by', $user->id)
-                    ->where('status', 'used')->count(),
+                    ->whereIn('status', ['active','expired'])
+                    ->count(),
 
             'unused' => Voucher::where('created_by', $user->id)
                     ->where('status', 'unused')->count(),
@@ -160,22 +163,35 @@ $avgCpuLoad =
             )
                 ->count(),
 
-            'usedVouchers' => Voucher::where('created_by', auth()->id()) //will merge with used up
-                                    ->where('status','used')
-                                    ->count(),
+            // 'usedVouchers' => Voucher::where('created_by', auth()->id()) //will merge with used up
+            //                         ->where('status','used')
+            //                         ->count(),
+
+            'usedVouchers' => Voucher::where('created_by', auth()->id())
+                                ->whereIn('status', ['active','expired'])
+                                ->count(),
             // 'activeSessions' => VoucherSession::where('status', 'active')->count(),
             // 'routers' => MikrotikDevice::count(),
             'routers' => MikrotikDevice::where('user_id', auth()->id())->count(),
 
+    //         'totalRevenue' => Voucher::where(
+    //     'created_by',
+    //     auth()->id()
+    // )
+    //         ->whereIn(
+    //             'status',
+    //             ['used', 'expired']
+    //         )
+    //         ->sum('price'),
             'totalRevenue' => Voucher::where(
-        'created_by',
-        auth()->id()
-    )
-    ->whereIn(
-        'status',
-        ['used', 'expired']
-    )
-    ->sum('price'),
+                    'created_by',
+                    auth()->id()
+                )
+                ->whereIn(
+                    'status',
+                    ['active', 'expired']
+                )
+                ->sum('price'),
 
 
                     // 'recentVouchers' => \App\Models\Voucher::latest()->take(10)->get(),

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
+use App\Models\VoucherSession;
 use App\Models\MikrotikDevice;
 use App\Models\Voucher;
 use App\Models\Customer;
@@ -170,6 +170,46 @@ class SyncHotspotUsers extends Command
                     $voucher->status = 'active';
                     $voucher->save();
 
+                                /*
+            |--------------------------------------------------------------------------
+            | CREATE SESSION RECORD
+            |--------------------------------------------------------------------------
+            */
+
+            VoucherSession::firstOrCreate(
+
+                [
+
+                    'voucher_id' => $voucher->id,
+
+                    'status' => 'active'
+
+                ],
+
+                [
+
+                    'voucher_code' => $voucher->code,
+
+                    'ip_address' =>
+                        $activeUser['address']
+                        ?? null,
+
+                    'mac_address' =>
+                        $activeUser['mac-address']
+                        ?? null,
+
+                    'router_id' =>
+                        $router->id,
+
+                    'login_at' => now(),
+
+                    'data_used' => 0
+
+                ]
+
+            );
+
+
                     /*
                     |--------------------------------------------------------------------------
                     | AUTO CREATE / UPDATE CUSTOMER
@@ -251,15 +291,8 @@ class SyncHotspotUsers extends Command
 
                     ->get();
 
-                foreach (
-
-                    $expiredVouchers
-
-                    as
-
-                    $voucher
-
-                ) {
+                foreach ($expiredVouchers as $voucher) 
+                    {
 
                     /*
                     |--------------------------------------------------------------------------
@@ -268,9 +301,7 @@ class SyncHotspotUsers extends Command
                     */
 
                     $voucher->status = 'used';
-
                     $voucher->used_at = now();
-
                     $voucher->save();
 
                     /*
@@ -280,16 +311,41 @@ class SyncHotspotUsers extends Command
                     */
 
                     Customer::where(
-
                         'username',
-
                         $voucher->username
-
                     )->update([
-
                         'status' => 'expired'
+                    ]);
+                    $voucher->save();
+
+                    VoucherSession::where(
+                        'voucher_id',
+                        $voucher->id
+                    )
+                    ->where(
+                        'status',
+                        'active'
+                    )
+                    ->update([
+
+                        'status' => 'completed',
+
+                        'logout_at' => now()
 
                     ]);
+
+                    /*
+|--------------------------------------------------------------------------
+| UPDATE CUSTOMER
+|--------------------------------------------------------------------------
+*/
+
+// Customer::where(
+//     'username',
+//     $voucher->username
+// )->update([
+//     'status' => 'expired'
+// ]);
 
                     /*
                     |--------------------------------------------------------------------------

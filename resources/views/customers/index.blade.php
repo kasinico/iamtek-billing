@@ -138,10 +138,15 @@ TABLE
                     @forelse($customers as $customer)
 
                         <tr>
-
+<!-- make customer name open profile -->
                             <td>
 
-                                {{ $customer->name }}
+                                    <a href="{{ route('customers.show', $customer->id) }}"
+                                    class="fw-bold text-decoration-none">
+
+                                        {{ $customer->name }}
+
+                                    </a>
 
                             </td>
 

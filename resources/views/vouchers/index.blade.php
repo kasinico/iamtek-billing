@@ -148,6 +148,7 @@
                     <th scope="col">
                         Package
                     </th>
+                    
 
                     <th scope="col">
                         Router
@@ -221,7 +222,7 @@
 
                         <td>
 
-                            {{ $voucher->package->name ?? 'N/A' }}
+                            {{ $voucher->package->name ?? 'N/A' }} - {{ $voucher->price }}
 
                         </td>
 

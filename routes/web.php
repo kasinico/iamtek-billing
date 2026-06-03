@@ -17,6 +17,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CustomerController;
 
+use App\Http\Controllers\ClientController;
 
 
 /*
@@ -165,6 +166,13 @@ Route::middleware(['auth','check.status','check.subscription'])->group(function 
         //  COMMISSION REPORT
     Route::get( '/reports/commissions', [ReportController::class, 'commissions'] )
         ->name('reports.commissions');
+
+        // client page details controller from manage isp table
+
+    Route::get(
+             '/clients/{user}',
+             [ClientController::class, 'show']
+        )->name('clients.show');
         
 
 
@@ -210,6 +218,7 @@ Route::resource(
 )->only([
 
     'index',
+    'show',
     'update',
     'destroy'
 

@@ -148,6 +148,9 @@ searchInput.addEventListener('input', function () {
                     <th>
                         Email
                     </th>
+                     <th>
+                        Telphone
+                    </th>
 
                     <th>
                         Role
@@ -189,7 +192,13 @@ searchInput.addEventListener('input', function () {
 
                                     <p class="fw-semibold mb-0">
 
-                                        {{ $user->name }}
+                                        <!-- {{ $user->name }} -->
+                                         <a href="{{ route('clients.show', $user->id) }}"
+   class="fw-bold text-decoration-none">
+
+    {{ $user->name }}
+
+</a>
 
                                     </p>
 
@@ -210,6 +219,11 @@ searchInput.addEventListener('input', function () {
                         <td>
 
                             {{ $user->email }}
+
+                        </td>
+                        <td>
+
+                            {{ $user->phone }}
 
                         </td>
 
@@ -326,6 +340,12 @@ searchInput.addEventListener('input', function () {
                                 @endif
 
                             </div>
+                            <!-- <a href="{{ route('clients.show', $user->id) }}"
+   class="btn btn-sm btn-warning">
+
+    View Profile
+
+</a> -->
 
                         </td>
 

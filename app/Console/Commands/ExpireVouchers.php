@@ -22,7 +22,7 @@ class ExpireVouchers extends Command
 
     public function handle()
     {
-        $expired = Voucher::where('status', 'active')
+        $expired = Voucher::whereIn('status', 'active')
             ->whereNotNull('expires_at')
             ->where('expires_at', '<=', now())
             ->get();

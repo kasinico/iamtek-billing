@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Voucher;
+use App\Models\VoucherSession;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\MikrotikDevice;
@@ -107,6 +108,113 @@ class CustomerController extends Controller
             )
         );
     }
+
+    /*
+|--------------------------------------------------------------------------
+| CUSTOMER PROFILE
+|--------------------------------------------------------------------------
+*/
+
+    public function show(Customer $customer)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | SECURITY
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            auth()->user()->role !== 'admin'
+            &&
+            $customer->user_id !== auth()->id()
+        ) {
+
+            abort(403);
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | VOUCHERS
+        |--------------------------------------------------------------------------
+        */
+
+        $vouchers = Voucher::where(
+
+            'username',
+
+            $customer->username
+
+        )
+        ->latest()
+        ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | customer SESSIONS
+        |--------------------------------------------------------------------------
+        */
+
+        // $sessions = VoucherSession::latest()
+
+        //     ->take(20)
+
+        //     ->get();
+        $voucherIds = $vouchers->pluck('id');
+
+        $sessions = VoucherSession::whereIn(
+                'voucher_id',
+                $voucherIds
+            )
+            ->latest()
+            ->take(20)
+            ->get();
+
+
+        /*
+|--------------------------------------------------------------------------
+| LIVE SESSION
+|--------------------------------------------------------------------------
+*/
+
+        $liveSession = null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | CUSTOMER TOTAL SPEND
+        |--------------------------------------------------------------------------
+        */
+
+        $totalSpend = $vouchers->sum('price');
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+
+            'customers.show',
+
+            compact(
+
+                'customer',
+
+                'vouchers',
+
+                'sessions',
+
+                'totalSpend',
+                'liveSession'
+
+            )
+
+        );
+    }
+
+
+
 
     /*
     |--------------------------------------------------------------------------

@@ -293,6 +293,24 @@
                 </span>
 
             </a>
+
+            <!-- hotspot wifi users -->
+             <a class="nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
+   href="{{ route('customers.index') }}">
+
+    <span class="nav-icon">
+
+        <i class="bi bi-people-fill"></i>
+
+    </span>
+
+    <span class="nav-text">
+
+        Wifi Users
+
+    </span>
+
+</a>
 @endif
         <!-- SYSTEM -->
 

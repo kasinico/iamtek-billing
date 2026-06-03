@@ -103,7 +103,10 @@
 
             </div>
 
+             
+
         </div>
+        
 
     </div>
 
@@ -140,6 +143,43 @@
         </div>
 
     </div>
+
+
+    <!-- unused -->
+
+    
+    <div class="col-md-6 col-xl-3">
+
+        <div class="metric-card success">
+
+            <div class="metric-icon">
+
+                <i class="bi bi-check-circle"></i>
+
+            </div>
+
+            <div class="metric-content">
+
+                <small class="metric-label">
+
+                    unused Vouchers
+
+                </small>
+
+                <h3 class="metric-value">
+
+                    {{ $unused }}
+
+                </h3>
+
+            </div>
+
+            
+
+        </div>
+
+    </div>
+     
 
     <!-- ACTIVE USERS -->
 
@@ -374,7 +414,7 @@
             <div class="col-12 col-sm-6 col-xl-3">
               <article class="metric-card metric-primary">
                 <div class="metric-top">
-                  <span class="metric-label">Total Vouchers</span>
+                  <span class="metric-label">My Total Vouchers</span>
                   <span class="metric-icon"><i class="bi bi-currency-dollar" aria-hidden="true"></i></span>
                 </div>
                 <div class="metric-value">{{ $myVouchers }}</div>

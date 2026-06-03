@@ -17,11 +17,14 @@ class ReportController extends Controller
 
         
         $totalRevenue =
-            Voucher::where('status', 'used')
+            Voucher::whereIn(
+                'status', 
+                ['active','expired']
+                )
                 ->sum('price');
 
         $voucherSales =
-            Voucher::where('status', 'used')
+            Voucher::whereIn('status', ['active','expired'])
                 ->count();
 
         $customerGrowth =
@@ -210,7 +213,7 @@ class ReportController extends Controller
         ')
         ->whereIn(
             'status',
-            ['used', 'expired']
+            ['active', 'expired']
         )
         ->groupBy('created_by')
         ->with('creator')
