@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install PHP extensions including pdo_pgsql for Render PostgreSQL
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_pgsql gd sockets
+    && docker-php-ext-install pdo_pgsql pdo_mysql gd sockets
 
 # Enable Apache rewrite module for Laravel routing
 RUN a2enmod rewrite
@@ -42,8 +42,6 @@ EXPOSE 80
 
 # Clean build leaks, rewrite the URL prefix, and execute fresh migrations at launch
 CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan migrate:fresh --force && \
-    apache2-foreground
+php artisan optimize:clear && \
+php artisan migrate --force && \
+apache2-foreground
