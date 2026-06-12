@@ -40,8 +40,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose port 80
 EXPOSE 80
 
-# Clean old environments and force PostgreSQL migration on startup
+# FORCE LARAVEL TO STRIP LOCAL HOVER VARIABLES AND MIGRATE FRESH
 CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && \
+    unset DB_HOST && unset DB_PORT && unset DB_DATABASE && unset DB_USERNAME && unset DB_PASSWORD && \
     php artisan config:clear && \
     php artisan cache:clear && \
     php artisan migrate:fresh --force && \
