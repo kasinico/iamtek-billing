@@ -5,15 +5,16 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libpq-dev \
     zip \
     unzip \
     git \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions needed for Laravel (Added sockets here)
+# Install PHP extensions including pdo_pgsql for Render PostgreSQL
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql gd sockets
+    && docker-php-ext-install pdo_pgsql gd sockets
 
 # Enable Apache rewrite module for Laravel routing
 RUN a2enmod rewrite
@@ -39,4 +40,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose port 80
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+# FIX: Automatically rewrite postgresql:// to pgsql:// so Laravel understands it
+CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && php artisan migrate --force && apache2-foreground
