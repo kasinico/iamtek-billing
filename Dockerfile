@@ -31,8 +31,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+# Install PHP dependencies without running scripts that cache files early
+RUN composer install --no-interaction --optimize-autoloader --no-dev --no-scripts
 
 # Set permissions for Laravel storage
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
@@ -40,10 +40,10 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose port 80
 EXPOSE 80
 
-# FORCE LARAVEL TO STRIP LOCAL HOVER VARIABLES AND MIGRATE FRESH
+# Clean build leaks, rewrite the URL prefix, and execute fresh migrations at launch
 CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && \
-    unset DB_HOST && unset DB_PORT && unset DB_DATABASE && unset DB_USERNAME && unset DB_PASSWORD && \
     php artisan config:clear && \
     php artisan cache:clear && \
+    php artisan route:clear && \
     php artisan migrate:fresh --force && \
     apache2-foreground
