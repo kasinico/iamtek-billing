@@ -40,5 +40,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose port 80
 EXPOSE 80
 
-# FIX: Automatically rewrite postgresql:// to pgsql:// so Laravel understands it
-CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && php artisan migrate --force && apache2-foreground
+# Clean old environments and force PostgreSQL migration on startup
+CMD export DATABASE_URL=$(echo $DATABASE_URL | sed 's/^postgresql:/pgsql:/') && \
+    php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan migrate:fresh --force && \
+    apache2-foreground
