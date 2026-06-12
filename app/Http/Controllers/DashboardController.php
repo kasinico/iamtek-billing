@@ -118,7 +118,7 @@ $avgCpuLoad =
             
         'totalRevenue' => Voucher::whereIn(
             'status',
-            ['used', 'expired']
+            ['active','used', 'expired']
         )->sum('price'),
 
                     
@@ -168,7 +168,7 @@ $avgCpuLoad =
             //                         ->count(),
 
             'usedVouchers' => Voucher::where('created_by', auth()->id())
-                                ->whereIn('status', ['active','expired'])
+                                ->whereIn('status', ['active','used','expired'])
                                 ->count(),
             // 'activeSessions' => VoucherSession::where('status', 'active')->count(),
             // 'routers' => MikrotikDevice::count(),
@@ -189,7 +189,7 @@ $avgCpuLoad =
                 )
                 ->whereIn(
                     'status',
-                    ['active', 'expired']
+                    ['active','used', 'expired']
                 )
                 ->sum('price'),
 

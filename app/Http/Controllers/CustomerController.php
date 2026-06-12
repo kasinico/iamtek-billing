@@ -172,12 +172,61 @@ class CustomerController extends Controller
 
 
         /*
-|--------------------------------------------------------------------------
-| LIVE SESSION
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | LIVE SESSION
+        |--------------------------------------------------------------------------
+        */
 
         $liveSession = null;
+
+        try {
+
+            if ($customer->router) {
+
+                $client = new \RouterOS\Client([
+
+                    'host' => $customer->router->ip_address,
+                    'user' => $customer->router->username,
+                    'pass' => $customer->router->password,
+                    'port' => $customer->router->port ?? 8728,
+
+                ]);
+
+                $query =
+                    new \RouterOS\Query(
+                        '/ip/hotspot/active/print'
+                    );
+
+                $activeUsers =
+                    $client->query($query)->read();
+
+                foreach ($activeUsers as $activeUser) {
+
+                    if (
+
+                        ($activeUser['user'] ?? null)
+
+                        ===
+
+                        $customer->username
+
+                    ) {
+
+                        $liveSession = $activeUser;
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+        } catch (\Throwable $e) {
+
+            $liveSession = null;
+
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -186,6 +235,24 @@ class CustomerController extends Controller
         */
 
         $totalSpend = $vouchers->sum('price');
+
+        /*
+|--------------------------------------------------------------------------
+| CUSTOMER ANALYTICS
+|--------------------------------------------------------------------------
+*/
+
+$totalSessions = $sessions->count();
+
+$lastLogin =
+    $sessions->first()?->login_at;
+
+$activeSession =
+    $sessions
+        ->where('status', 'active')
+        ->count();
+
+
 
         /*
         |--------------------------------------------------------------------------
@@ -206,7 +273,10 @@ class CustomerController extends Controller
                 'sessions',
 
                 'totalSpend',
-                'liveSession'
+                'liveSession',
+                'totalSessions',
+'lastLogin',
+'activeSession',
 
             )
 

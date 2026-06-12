@@ -35,7 +35,7 @@ public function show(User $user)
         )
         ->whereIn(
     'status',
-    ['active', 'expired']
+    ['active','used', 'expired']
 )
         ->sum('price');
 
@@ -45,7 +45,7 @@ public function show(User $user)
         )
         ->whereIn(
             'status',
-            ['active', 'expired']
+            ['active','used', 'expired']
         )
         ->sum('commission_amount');
 
@@ -55,7 +55,7 @@ public function show(User $user)
         )
         ->whereIn(
         'status',
-        ['active', 'expired']
+        ['active','used', 'expired']
     )
         ->sum('shopkeeper_amount');
 
@@ -75,7 +75,7 @@ public function show(User $user)
         $user->id
     )->whereIn(
         'status', 
-        ['active','expired']
+        ['active','used','expired']
     )->count();
 
     $activeVouchers = Voucher::where(
